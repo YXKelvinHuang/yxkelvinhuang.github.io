@@ -2,23 +2,23 @@ vCard - Personal Portfolio
 
 # sidebar
 
-alt = Richard hanrick
-Richard hanrick
+alt = Kelvin Huang
+Kelvin Huang
 Web developer
 
 Show Contacts
 
 Email
-richard@example.com
+yxkelvinhuang@berkeley.edu
 
 Phone
-+1 (213) 352-2795
++1 (510) 229-9509
 
 Birthday
-June 23, 1982
+July 10, 2003
 
 Location
-Sacramento, California, USA
+Berkeley, California, USA
 
 # navbar
 
@@ -93,9 +93,19 @@ Resume
 
 Education
 
-University school of the arts
-2007 — 2008
-Nemo enims ipsam voluptatem, blanditiis praesentium voluptum delenit atque corrupti, quos dolores et quas molestias exceptur.
+University of California, Berkeley
+Sep 2021 — Present
+GPA: 3.88 / 4.00
+Relevent Courses:
+CS 188 - Introduction to Artificial Intelligence
+EECS 126 - Probability and Random Processes
+CS 61C - Machine Structures
+CS 70 - Discrete Mathematics and Probability Theory
+CS 61B - Data Structures
+CS 61A - Structure and Interpretation of Computer Programs
+Math 110 - Linear Algebra
+Math 53 - Multivariable Calculus
+UGBA 10 - Principles of Business
 
 New york academy of art
 2006 — 2007
