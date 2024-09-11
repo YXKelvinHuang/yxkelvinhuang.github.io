@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project 1: Images of the Russian Empire: Colorizing the Prokudin-Gorskii Photo Collection</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 66%; /* 2/3 of the screen */
+            margin: 0 auto; /* Center the container */
+            padding: 20px;
+        }
+        h1 {
+            font-size: 2.5em;
+        }
+        h2 {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+        h3 {
+            font-size: 1.2em;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        p {
+            font-size: 1em;
+            margin-bottom: 20px;
+        }
+        .images {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+        .images img {
+            width: 100%;
+            height: auto;
+        }
+        .image-caption {
+            text-align: center;
+            margin-top: 5px;
+            font-size: 1em;
+            white-space: pre-line;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Project 1: Images of the Russian Empire: Colorizing the Prokudin-Gorskii Photo Collection</h1>
+        <p><strong>Student Name: Kelvin Huang</strong></p>
+
+        <h2>Approach (Step by Step)</h2>
+
+        <h3>1. Image Loading and Preprocessing</h3>
+        <p>The images from the Prokudin-Gorskii collection are read into the program using <code>skimage.io.imread()</code>. Since each image in the collection is a composite of three separate black-and-white images representing the blue, green, and red channels, the program first splits the image into three parts, each corresponding to one of the color channels.</p>
+        <p>The split is done by calculating the height of the image, dividing it into three equal sections, and assigning each section to the respective color channel (B, G, R).</p>
+
+        <h3>2. Cropping the Edges</h3>
+        <p>After splitting the image into channels, the edges of each channel are cropped to remove any misalignment or noise that may exist at the borders. This is done using the <code>crop_image()</code> function, which crops a specified percentage of the edges (10% in this case) from all sides of the image.</p>
+
+        <h3>3. Image Alignment</h3>
+        <p>The core of this project is the alignment of the color channels to create a properly registered color image. Misalignments between the three channels can occur due to the manual capture of the original photographs.</p>
+        <p>To align the images, a multi-resolution (pyramid) approach is used. The images are rescaled at different scales (12.5%, 25%, 50%, 100%) using <code>skimage.transform.rescale()</code>. At each scale, the best displacement between the green and red channels, and the green and blue channels, is found using the <code>align_l2_norm()</code> function. This function shifts the images over a range of displacements, computes the L2 norm between the shifted image and the reference image, and returns the displacement with the lowest error.</p>
+
+        <h3>4. Applying the Best Displacement</h3>
+        <p>After finding the optimal displacements for both the red-to-green and blue-to-green alignments, these displacements are applied using <code>np.roll()</code>, which shifts the red and blue channels accordingly.</p>
+
+        <h3>5. Reconstruction and Saving</h3>
+        <p>The aligned red, green, and blue channels are stacked together to form the final color image. The resulting image is converted to 8-bit format using <code>(im * 255).astype(np.uint8)</code> to ensure proper color representation, and then saved to disk as a JPEG file with the suffix <code>_colored</code>.</p>
+        <p>The displacements used for the alignment of each image are printed to the console for reference.</p>
+
+        <h3>6. Batch Processing of Multiple Files</h3>
+        <p>The program is designed to process multiple files in a batch. A list of image files is processed sequentially using the <code>process_files()</code> function, which performs all the steps mentioned above for each file in the list.</p>
+
+        <h3>Image Results</h3>
+        <div class="images">
+            <!-- Original images -->
+            <div>
+                <img src="output/cathedral_colored.jpg" alt="Cathedral">
+                <div class="image-caption">Cathedral: 
+Best displacement (R to G): (7, 1)
+Best displacement (B to G): (-5, -2)</div>
+            </div>
+            <div>
+                <img src="output/church_colored.jpg" alt="Church">
+                <div class="image-caption">Church: 
+Best displacement (R to G): (33, -8)
+Best displacement (B to G): (-25, -4)</div>
+            </div>
+            <div>
+                <img src="output/emir_colored.jpg" alt="Emir">
+                <div class="image-caption">Emir: 
+Best displacement (R to G): (57, 17)
+Best displacement (B to G): (-49, -24)</div>
+            </div>
+            <div>
+                <img src="output/harvesters_colored.jpg" alt="Harvesters">
+                <div class="image-caption">Harvesters: 
+Best displacement (R to G): (65, -3)
+Best displacement (B to G): (-59, -16)</div>
+            </div>
+            <div>
+                <img src="output/icon_colored.jpg" alt="Icon">
+                <div class="image-caption">Icon: 
+Best displacement (R to G): (48, 5)
+Best displacement (B to G): (-41, -17)</div>
+            </div>
+            <div>
+                <img src="output/lady_colored.jpg" alt="Lady">
+                <div class="image-caption">Lady: 
+Best displacement (R to G): (61, 3)
+Best displacement (B to G): (-51, -9)</div>
+            </div>
+            <div>
+                <img src="output/melons_colored.jpg" alt="Melons">
+                <div class="image-caption">Melons: 
+Best displacement (R to G): (96, 3)
+Best displacement (B to G): (-81, -10)</div>
+            </div>
+            <div>
+                <img src="output/monastery_colored.jpg" alt="Monastery">
+                <div class="image-caption">Monastery: 
+Best displacement (R to G): (6, 1)
+Best displacement (B to G): (3, -2)</div>
+            </div>
+            <div>
+                <img src="output/onion_church_colored.jpg" alt="Onion Church">
+                <div class="image-caption">Onion Church: 
+Best displacement (R to G): (57, 10)
+Best displacement (B to G): (-51, -26)</div>
+            </div>
+            <div>
+                <img src="output/sculpture_colored.jpg" alt="Sculpture">
+                <div class="image-caption">Sculpture: 
+Best displacement (R to G): (107, -16)
+Best displacement (B to G): (-33, 11)</div>
+            </div>
+            <div>
+                <img src="output/self_portrait_colored.jpg" alt="Self Portrait">
+                <div class="image-caption">Self Portrait: 
+Best displacement (R to G): (98, 8)
+Best displacement (B to G): (-78, -29)</div>
+            </div>
+            <div>
+                <img src="output/three_generations_colored.jpg" alt="Three Generations">
+                <div class="image-caption">Three Generations: 
+Best displacement (R to G): (58, -3)
+Best displacement (B to G): (-53, -14)</div>
+            </div>
+            <div>
+                <img src="output/tobolsk_colored.jpg" alt="Tobolsk">
+                <div class="image-caption">Tobolsk: 
+Best displacement (R to G): (4, 1)
+Best displacement (B to G): (-3, -3)</div>
+            </div>
+            <div>
+                <img src="output/train_colored.jpg" alt="Train">
+                <div class="image-caption">Train: 
+Best displacement (R to G): (43, 27)
+Best displacement (B to G): (-42, -5)</div>
+            </div>
+        </div>
+
+        <h3>Own Choosing Example</h3>
+        <div class="images">
+            <!-- Additional images -->
+            <div>
+                <img src="output/additional_1_colored.jpg" alt="Additional 1">
+                <div class="image-caption">Additional 1: 
+Best displacement (R to G): (71, -8)
+Best displacement (B to G): (-55, -12)</div>
+            </div>
+            <div>
+                <img src="output/additional_2_colored.jpg" alt="Additional 2">
+                <div class="image-caption">Additional 2: 
+Best displacement (R to G): (56, -15)
+Best displacement (B to G): (-45, 12)</div>
+            </div>
+            <div>
+                <img src="output/additional_3_colored.jpg" alt="Additional 3">
+                <div class="image-caption">Additional 3: 
+Best displacement (R to G): (52, -13)
+Best displacement (B to G): (-41, 16)</div>
+            </div>
+            <div>
+                <img src="output/additional_4_colored.jpg" alt="Additional 4">
+                <div class="image-caption">Additional 4: 
+Best displacement (R to G): (46, -8)
+Best displacement (B to G): (-32, 16)</div>
+            </div>
+            <div>
+                <img src="output/additional_5_colored.jpg" alt="Additional 5">
+                <div class="image-caption">Additional 5: 
+Best displacement (R to G): (91, 33)
+Best displacement (B to G): (-207, 216)</div>
+            </div>
+            <div>
+                <img src="output/additional_6_colored.jpg" alt="Additional 6">
+                <div class="image-caption">Additional 6: 
+Best displacement (R to G): (82, -2)
+Best displacement (B to G): (-34, -2)</div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
