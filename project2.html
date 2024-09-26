@@ -176,6 +176,16 @@
             </div>
         </div>
 
+        <p>The gradient magnitude represents the strength of the gradient at each pixel and is essential for detecting edges in an image. It is computed by combining the gradients in the x and y directions. After calculating the partial derivatives \( D_x \) and \( D_y \) using the finite difference operators, the gradient magnitude at each pixel is given by the formula:</p>
+            
+            $$
+            \text{Gradient Magnitude} = \sqrt{(D_x)^2 + (D_y)^2}
+            $$
+            
+            This magnitude provides a scalar value representing how much the intensity is changing at a particular point, with higher values corresponding to sharper transitions (edges). By applying a threshold to the gradient magnitude, we can create a binarized edge image that highlights the most prominent edges while reducing noise.
+            
+            </p>
+
         <!-- Part 1.2 Section -->
         <h3>Part 1.2: Derivative of Gaussian (DoG) Filter</h3>
         <p>In this part, we apply a Gaussian smoothing filter before taking the gradient to reduce noise and improve the robustness of edge detection.</p>
@@ -532,6 +542,8 @@
                 <div class="image-caption">Laplacian stacks</div>
             </div>
         </div>
+
+        <p>Takeaways: One of the most important things I learned from this project is how critical different frequency components are in shaping an image's appearance. Low-frequency components capture the overall structure and smooth transitions, while high-frequency components define sharp edges and fine details. Through tasks like hybrid images and multiresolution blending, I realized that manipulating these frequencies allows us to control which parts of an image dominate perception, depending on the viewing distance or how the image is processed. For example, high frequencies are key to enhancing sharpness and edges, but too much can introduce noise. On the other hand, low frequencies give an image its general shape but can obscure important details if overused. This project deepened my understanding of how balancing these frequencies is essential to achieving both clarity and visual appeal in image processing.</p>
 
     </div>
 
