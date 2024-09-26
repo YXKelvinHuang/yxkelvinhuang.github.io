@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project 2: Fun with Filters and Frequencies!</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 66%;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            font-size: 2.5em;
+        }
+        h2, h3 {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+        p {
+            font-size: 1em;
+            margin-bottom: 20px;
+        }
+        .images {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+        .sharpening-images {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 40px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .sharpening-alphas {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            text-align: center;
+        }
+        .fishermans-images {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .harry-images {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .images img, .sharpening-images img, .sharpening-alphas img, .fishermans-images img, .harry-images img {
+            width: 100%;
+            height: auto;
+        }
+        /* Adjusting the size of Harry images */
+        .harry-images img {
+            width: 100%; /* Adjust the size to 50% of the original width */
+            height: auto;
+        }
+        .image-caption {
+            text-align: center;
+            margin-top: 5px;
+            font-size: 1em;
+        }
+        .hybrid-images {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 0.5fr; /* Proportionally larger columns */
+        gap: 40px;
+        text-align: center;
+        margin-bottom: 20px;
+        }
+        /* The first three images will be automatically larger due to grid proportions */
+        .hybrid-images img {
+            width: 100%; /* Ensure images respect their container */
+            height: auto;
+        }
+        /* Keep the last image (small hybrid) smaller */
+        .hybrid-images div:last-child img {
+            width: 70%; /* Take up the smaller grid space */
+        }
+        .fourier-image {
+        display: flex;
+        justify-content: center; /* Center the image horizontally */
+        margin-bottom: 40px; /* Add space at the bottom */
+        }
+
+        .fourier-image img {
+            width: 100%; /* Set a larger size for the Laplacian stack image */
+            height: auto; /* Maintain aspect ratio */
+        }
+        .image-caption {
+            text-align: center;
+            font-size: 1.2em;
+            margin-top: 10px;
+        }
+        .stacked-images {
+        display: flex;
+        flex-direction: column; /* Stack images vertically */
+        align-items: center; /* Center the images horizontally */
+        gap: 20px; /* Add spacing between the images */
+        margin-bottom: 20px;
+        }
+        .stacked-images img {
+            width: 100%; /* Adjust the size of the images */
+            height: auto;
+        }
+        .image-caption {
+            text-align: center;
+            font-size: 1.2em;
+            margin-top: 5px;
+        }
+        .horizontal-images {
+        display: flex;
+        justify-content: space-around; /* Distribute images evenly across the row */
+        align-items: center;
+        margin-bottom: 40px; /* Add space between rows */
+        gap: 20px; /* Add space between images to avoid overlap */
+        }
+
+        .horizontal-images img {
+            width: 200px; /* Set a fixed width for consistency */
+            height: auto; /* Maintain aspect ratio */
+        }
+        .image-caption {
+            text-align: center;
+            font-size: 1em;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Project 2: Fun with Filters and Frequencies!</h1>
+        <p><strong>Student Name: Kelvin Huang</strong></p>
+
+        <h2>Part 1: Fun with Filters</h2>
+
+        <!-- Part 1.1 Section -->
+        <h3>Part 1.1: Finite Difference Operator</h3>
+        <p>In this part, we apply the finite difference operator using the humble finite difference as our filter in the x and y directions. This method is essential for calculating image gradients, which help us detect edges and changes in intensity. For edge detection, a threshold of 25 is used.</p>
+
+        <!-- Display the text formula using MathJax -->
+        <div class="equation">
+            $$ D_x = \begin{bmatrix} 1 & -1 \end{bmatrix}, \quad D_y = \begin{bmatrix} 1 \\ -1 \end{bmatrix} $$
+        </div>
+
+        <div class="images">
+            <div>
+                <img src="output2/cameraman_gx.png" alt="Gradient X (gx)">
+                <div class="image-caption">Gradient X (gx)</div>
+            </div>
+            <div>
+                <img src="output2/cameraman_gy.png" alt="Gradient Y (gy)">
+                <div class="image-caption">Gradient Y (gy)</div>
+            </div>
+            <div>
+                <img src="output2/cameraman_gm.png" alt="Gradient Magnitude (gm)">
+                <div class="image-caption">Gradient Magnitude (gm)</div>
+            </div>
+            <div>
+                <img src="output2/cameraman_edge.png" alt="Edges">
+                <div class="image-caption">Edges (Threshold = 25)</div>
+            </div>
+        </div>
+
+        <!-- Part 1.2 Section -->
+        <h3>Part 1.2: Derivative of Gaussian (DoG) Filter</h3>
+        <p>In this part, we apply a Gaussian smoothing filter before taking the gradient to reduce noise and improve the robustness of edge detection.</p>
+
+        <div class="images">
+            <div>
+                <img src="output2/smoothed_cameraman.png" alt="Smoothed Image">
+                <div class="image-caption">Smoothed Image</div>
+            </div>
+            <div>
+                <img src="output2/smoothed_cameraman_gx.png" alt="Gradient X Smoothed">
+                <div class="image-caption">Gradient X Smoothed</div>
+            </div>
+            <div>
+                <img src="output2/smoothed_cameraman_gy.png" alt="Gradient Y Smoothed">
+                <div class="image-caption">Gradient Y Smoothed</div>
+            </div>
+            <div>
+                <img src="output2/smoothed_cameraman_gm.png" alt="Gradient Magnitude Smoothed">
+                <div class="image-caption">Gradient Magnitude Smoothed</div>
+            </div>
+            <div>
+                <img src="output2/smoothed_cameraman_edge.png" alt="Edges Smoothed">
+                <div class="image-caption">Edges Smoothed (Threshold = 20)</div>
+            </div>
+        </div>
+
+        <p>Differences I see: These images appear smoother with reduced noise, while the edges are cleaner and more pronounced. Note: I use a lower threshold here compare to the previous section.</p>
+
+        <!-- New subsection: Derivative of Gaussian with Single Convolution -->
+        <h3>Single Convolution with DoG Filters</h3>
+        <p>Instead of applying two separate operations (smoothing and then calculating gradients), we can use a single convolution with Derivative of Gaussian filters. Here, we create filters by convolving the Gaussian with \(D_x\) and \(D_y\) to compute the gradients directly. Below are the DoG filters and the corresponding gradient and edge images.</p>
+
+        <div class="images">
+            <div>
+                <img src="output2/DoG_x.png" alt="DoG Filter (X direction)">
+                <div class="image-caption">DoG Filter (X direction)</div>
+            </div>
+            <div>
+                <img src="output2/DoG_y.png" alt="DoG Filter (Y direction)">
+                <div class="image-caption">DoG Filter (Y direction)</div>
+            </div>
+            <div>
+                <img src="output2/DOG_gradient_x.png" alt="Gradient X (DoG)">
+                <div class="image-caption">Gradient X (DoG)</div>
+            </div>
+            <div>
+                <img src="output2/DOG_gradient_y.png" alt="Gradient Y (DoG)">
+                <div class="image-caption">Gradient Y (DoG)</div>
+            </div>
+            <div>
+                <img src="output2/DOG_gradient_magnitude.png" alt="Gradient Magnitude (DoG)">
+                <div class="image-caption">Gradient Magnitude (DoG)</div>
+            </div>
+            <div>
+                <img src="output2/DOG_edges.png" alt="Edges (DoG)">
+                <div class="image-caption">Edges (DoG, Threshold = 20)</div>
+            </div>
+        </div>
+
+        <p>We can see that the result of DoG is same as the method above. Clear and smooth.</p>
+
+        <!-- New Part 2 Section -->
+        <h2>Part 2: Fun with Frequencies!</h2>
+
+        <h3>Part 2.1: Image "Sharpening"</h3>
+
+        <!-- Part 2.1 Section: Image "Sharpening" -->
+
+        <h3>Taj Mahal</h3>
+
+        <!-- Displaying original and high frequencies images for Taj Mahal -->
+        <div class="sharpening-images">
+            <div>
+                <img src="output2/taj_original_image.jpg" alt="Original Image">
+                <div class="image-caption">Original Image</div>
+            </div>
+            <div>
+                <img src="output2/taj_high_frequencies.jpg" alt="High Frequencies (DoG)">
+                <div class="image-caption">High Frequencies (DoG)</div>
+            </div>
+        </div>
+
+        <!-- Displaying sharpened images with different alphas for Taj Mahal -->
+        <div class="sharpening-alphas">
+            <div>
+                <img src="output2/taj_sharpened_image_alpha_0.jpg" alt="Alpha = 0">
+                <div class="image-caption">Alpha = 0</div>
+            </div>
+            <div>
+                <img src="output2/taj_sharpened_image_alpha_2.jpg" alt="Alpha = 2">
+                <div class="image-caption">Alpha = 2</div>
+            </div>
+            <div>
+                <img src="output2/taj_sharpened_image_alpha_4.jpg" alt="Alpha = 4">
+                <div class="image-caption">Alpha = 4</div>
+            </div>
+            <div>
+                <img src="output2/taj_sharpened_image_alpha_6.jpg" alt="Alpha = 6">
+                <div class="image-caption">Alpha = 6</div>
+            </div>
+        </div>
+
+        <h3>Motorcycle</h3>
+
+        <!-- Displaying original and high frequencies images for Motorcycle -->
+        <div class="sharpening-images">
+            <div>
+                <img src="output2/motorcycle_original_image.jpg" alt="Original Image">
+                <div class="image-caption">Original Image</div>
+            </div>
+            <div>
+                <img src="output2/motorcycle_high_frequencies.jpg" alt="High Frequencies (DoG)">
+                <div class="image-caption">High Frequencies (DoG)</div>
+            </div>
+        </div>
+
+        <!-- Displaying sharpened images with different alphas for Motorcycle -->
+        <div class="sharpening-alphas">
+            <div>
+                <img src="output2/motorcycle_sharpened_image_alpha_0.jpg" alt="Alpha = 0">
+                <div class="image-caption">Alpha = 0</div>
+            </div>
+            <div>
+                <img src="output2/motorcycle_sharpened_image_alpha_2.jpg" alt="Alpha = 2">
+                <div class="image-caption">Alpha = 2</div>
+            </div>
+            <div>
+                <img src="output2/motorcycle_sharpened_image_alpha_4.jpg" alt="Alpha = 4">
+                <div class="image-caption">Alpha = 4</div>
+            </div>
+            <div>
+                <img src="output2/motorcycle_sharpened_image_alpha_6.jpg" alt="Alpha = 6">
+                <div class="image-caption">Alpha = 6</div>
+            </div>
+        </div>
+
+        <h3>Sharpened After Blurred: Fishermans</h3>
+
+        <!-- Displaying original, blurred, and sharpened images for Fishermans -->
+        <div class="fishermans-images">
+            <div>
+                <img src="output2/fishermans_original.jpg" alt="Original Image">
+                <div class="image-caption">Original Image</div>
+            </div>
+            <div>
+                <img src="output2/fishermans_blurred.jpg" alt="Blurred Image">
+                <div class="image-caption">Blurred Image</div>
+            </div>
+            <div>
+                <img src="output2/fishermans_sharpened.jpg" alt="Sharpened Image">
+                <div class="image-caption">Sharpened After Blur</div>
+            </div>
+        </div>
+
+        <h3>Sharpened After Blurred: My Friend Harry on a Kayak</h3>
+
+        <!-- Displaying original, blurred, and sharpened images for Fishermans -->
+        <div class="harry-images">
+            <div>
+                <img src="output2/harry_original.jpg" alt="Original Image">
+                <div class="image-caption">Original Image</div>
+            </div>
+            <div>
+                <img src="output2/harry_blurred.jpg" alt="Blurred Image">
+                <div class="image-caption">Blurred Image</div>
+            </div>
+            <div>
+                <img src="output2/harry_sharpened.jpg" alt="Sharpened Image">
+                <div class="image-caption">Sharpened After Blur</div>
+            </div>
+        </div>
+
+        <p> The blurred and sharpened image, in contrast to the original, shows more noise and visual artifacts. Although the edges become sharper and more defined, there’s a noticeable reduction in the clarity of fine details. Many of the intricate elements from the original are either blurred or entirely lost. The sharpening process enhances edge contrast but also introduces unwanted noise, giving the image a more artificial appearance and compromising its overall quality.</p>
+
+        <h3>Part 2.2: Hybrid Images</h3>
+
+        <h3>Derek and Nutmeg</h3>
+        <div class="hybrid-images">
+            <div>
+                <img src="output2/derek.jpg" alt="Low Frequency Image">
+                <div class="image-caption">Low Frequency Image</div>
+            </div>
+            <div>
+                <img src="output2/nutmeg.jpg" alt="High Frequency Image">
+                <div class="image-caption">High Frequency Image</div>
+            </div>
+            <div>
+                <img src="output2/hybrid_derek_nutmeg.jpg" alt="Hybrid Image">
+                <div class="image-caption">Hybrid Image</div>
+            </div>
+            <div>
+                <img src="output2/hybrid_derek_nutmeg.jpg" alt="Hybrid Image (Small)">
+                <div class="image-caption">Hybrid Image (Small)</div>
+            </div>
+        </div>
+
+        <h3>Curry and Fox</h3>
+        <div class="hybrid-images">
+            <div>
+                <img src="output2/curry.jpg" alt="Low Frequency Image">
+                <div class="image-caption">Low Frequency Image</div>
+            </div>
+            <div>
+                <img src="output2/fox.jpg" alt="High Frequency Image">
+                <div class="image-caption">High Frequency Image</div>
+            </div>
+            <div>
+                <img src="output2/hybrid_curry_fox.jpg" alt="Hybrid Image">
+                <div class="image-caption">Hybrid Image</div>
+            </div>
+            <div>
+                <img src="output2/hybrid_curry_fox.jpg" alt="Hybrid Image (Small)">
+                <div class="image-caption">Hybrid Image (Small)</div>
+            </div>
+        </div>
+
+        <h3>Jessi and Panda (Fail Case)</h3>
+        <div class="hybrid-images">
+            <div>
+                <img src="output2/jessi.jpg" alt="Low Frequency Image">
+                <div class="image-caption">Low Frequency Image</div>
+            </div>
+            <div>
+                <img src="output2/panda.jpg" alt="High Frequency Image">
+                <div class="image-caption">High Frequency Image</div>
+            </div>
+            <div>
+                <img src="output2/hybrid_jessi_panda.jpg" alt="Hybrid Image">
+                <div class="image-caption">Hybrid Image</div>
+            </div>
+            <div>
+                <img src="output2/hybrid_jessi_panda.jpg" alt="Hybrid Image (Small)">
+                <div class="image-caption">Hybrid Image (Small)</div>
+            </div>
+        </div>
+
+        <h3>Pizza and Jellycat (Favorite) </h3>
+        <div class="hybrid-images">
+            <div>
+                <img src="output2/pizza.jpg" alt="Low Frequency Image">
+                <div class="image-caption">Low Frequency Image</div>
+            </div>
+            <div>
+                <img src="output2/jellycat.jpg" alt="High Frequency Image">
+                <div class="image-caption">High Frequency Image</div>
+            </div>
+            <div>
+                <img src="output2/hybrid_pizza_jellycat.jpg" alt="Hybrid Image">
+                <div class="image-caption">Hybrid Image</div>
+            </div>
+            <div>
+                <img src="output2/hybrid_pizza_jellycat.jpg" alt="Hybrid Image (Small)">
+                <div class="image-caption">Hybrid Image (Small)</div>
+            </div>
+        </div>
+
+        <h3>Frequency Analysis </h3>
+
+        <div class="fourier-image">
+            <div>
+                <img src="output2/fourier_high_frequencies.png" alt="Fourier High Frequencies">
+                <div class="image-caption">Frequencies</div>
+            </div>
+        </div>
+
+        <!-- Additional Sections -->
+        <h3>Part 2.3: Gaussian and Laplacian Stacks</h3>
+        <div class="stacked-images">
+            <div>
+                <img src="output2/2.3.1.png" alt="Image 2.3.1">
+                <div class="image-caption">Gaussian Stack</div>
+            </div>
+            <div>
+                <img src="output2/2.3.2.png" alt="Image 2.3.2">
+                <div class="image-caption">Laplacian Stack</div>
+            </div>
+            <div>
+                <img src="output2/2.3.3.png" alt="Image 2.3.3">
+                <div class="image-caption">Recreation of Figure 3.42</div>
+            </div>
+            <div>
+                <img src="output2/2.3.4.png" alt="Image 2.3.4">
+                <div class="image-caption">Final Blended Result</div>
+            </div>
+        </div>
+
+        <h3>Part 2.4: Multiresolution Blending (a.k.a. the oraple!)</h3>
+
+        <!-- Displaying first set: apple, orange, mask_left_right, oraple -->
+        <div class="horizontal-images">
+            <div>
+                <img src="output2/apple.jpg" alt="Apple">
+                <div class="image-caption">Apple</div>
+            </div>
+            <div>
+                <img src="output2/orange.jpg" alt="Orange">
+                <div class="image-caption">Orange</div>
+            </div>
+            <div>
+                <img src="output2/mask_left_right.jpg" alt="Mask (Left to Right)">
+                <div class="image-caption">Mask (Left to Right)</div>
+            </div>
+            <div>
+                <img src="output2/oraple.jpg" alt="Oraple">
+                <div class="image-caption">Oraple</div>
+            </div>
+        </div>
+        
+        <!-- Displaying second set: minion_resize, avengers_resize, minion_mask_resize, avengers_minion -->
+        <div class="horizontal-images">
+            <div>
+                <img src="output2/minion_resize.jpg" alt="Minion Resized">
+                <div class="image-caption">Minion</div>
+            </div>
+            <div>
+                <img src="output2/avengers_resize.jpg" alt="Avengers Resized">
+                <div class="image-caption">Avengers</div>
+            </div>
+            <div>
+                <img src="output2/minion_mask_resize.jpg" alt="Minion Mask Resized">
+                <div class="image-caption">Minion Mask</div>
+            </div>
+            <div>
+                <img src="output2/avengers_minion.jpg" alt="Avengers + Minion">
+                <div class="image-caption">Avengers + Minion</div>
+            </div>
+        </div>
+        
+        <!-- Displaying third set: tnt_resize, warriors_resize, tnt_mask_resize, warriors_tnt -->
+        <div class="horizontal-images">
+            <div>
+                <img src="output2/tnt_resize.jpg" alt="TNT Resized">
+                <div class="image-caption">TNT</div>
+            </div>
+            <div>
+                <img src="output2/warriors_resize.jpg" alt="Warriors Resized">
+                <div class="image-caption">Warriors</div>
+            </div>
+            <div>
+                <img src="output2/tnt_mask_resize.jpg" alt="TNT Mask Resized">
+                <div class="image-caption">TNT Mask</div>
+            </div>
+            <div>
+                <img src="output2/warriors_tnt.jpg" alt="Warriors + TNT">
+                <div class="image-caption">Warriors + TNT</div>
+            </div>
+        </div>
+
+        <p>The avengers and minion is my favorite.  Below are the Laplacian stacks for this blended image.</p>
+        <div class="fourier-image">
+            <div>
+                <img src="output2/minion_avengers_procedure.jpg" alt="minion_avengers_procedure">
+                <div class="image-caption">Laplacian stacks</div>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>
