@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project 3: Face Morphing</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 66%; /* 2/3 of the screen */
+            margin: 0 auto; /* Center the container */
+            padding: 20px;
+        }
+        h1 {
+            font-size: 2.5em;
+        }
+        h2 {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+        h3 {
+            font-size: 1.2em;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        p {
+            font-size: 1em;
+            margin-bottom: 20px;
+        }
+        /* Flexbox to center content */
+        .images, .images-triangulation {
+            display: flex;
+            justify-content: center; /* Center content horizontally */
+            align-items: center; /* Align content vertically */
+            gap: 20px;
+            flex-wrap: wrap; /* Allow images to wrap onto new lines if necessary */
+        }
+        /* Add more space between rows */
+        .images {
+            margin-bottom: 40px; /* Adjust this value to increase/decrease space between rows */
+        }
+        /* Ensure images maintain responsive size */
+        .images img, .images-triangulation img {
+            width: 100%;
+            height: auto;
+            max-width: 150px; /* Set a max width to display all images smaller */
+        }
+        .image-caption {
+            text-align: center;
+            margin-top: 5px;
+            font-size: 1em;
+            white-space: pre-line;
+        }
+        /* Center text and image as a block */
+        .image-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Center each image block */
+        }
+        /* Center and resize GIF */
+        .gif-container {
+            text-align: center;
+            margin-top: 30px;
+        }
+        .gif-container img {
+            width: 400px; /* Resize the GIF */
+            height: auto;
+        }
+        /* Flexbox for two images per group */
+        .row {
+            display: flex;
+            justify-content: space-around; /* Space between each group */
+            margin-bottom: 40px; /* Space between rows */
+        }
+        .image-group {
+            text-align: center;
+        }
+        .image-group img {
+            width: 100%;
+            height: auto;
+            max-width: 250px; /* Set a max width for the images */
+        }
+        .caption {
+            font-style: italic;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Project 3: Face Morphing</h1>
+        <p><strong>Student Name: Kelvin Huang</strong></p>
+
+        <!-- Part 1: Defining Correspondences -->
+        <h2>Part 1: Defining Correspondences</h2>
+        <p>
+            In this part, I manually select corresponding points on two images (Kelvin's and Jessi's faces) using interactive selection. These points represent key facial features, such as eyes, nose, and mouth. Once the points are defined, I calculate a <strong>midway shape</strong> by averaging the corresponding points from both images.
+        </p>
+        <p>
+            I then apply <strong>Delaunay triangulation</strong> to divide each image into triangular regions based on the selected points. The triangulation ensures that the morphing process is smooth by aligning facial features across both images. Triangulation is performed on Kelvin’s image, Jessi’s image, and the midway shape. The midway triangulation is used to warp and blend the two images consistently throughout the morphing process.
+        </p>
+
+        <!-- First row: Kelvin and Jessi resized images side by side -->
+        <div class="images">
+            <div class="image-container">
+                <img src="output3/kelvin_resized.jpg" alt="Kelvin Resized">
+                <div class="image-caption">Picture of myself</div>
+            </div>
+            <div class="image-container">
+                <img src="output3/jessi_resized.jpg" alt="Jessi Resized">
+                <div class="image-caption">My girlfriend Jessi</div>
+            </div>
+        </div>
+
+        <!-- Second row: Kelvin, Midway, and Jessi triangulation images -->
+        <div class="images-triangulation">
+            <div class="image-container">
+                <img src="output3/kelvin_triangulation.jpg" alt="Kelvin Triangulation">
+                <div class="image-caption">Triangulation of Kelvin</div>
+            </div>
+            <div class="image-container">
+                <img src="output3/midway_triangulation.jpg" alt="Midway Triangulation">
+                <div class="image-caption">Midway Triangulation</div>
+            </div>
+            <div class="image-container">
+                <img src="output3/jessi_triangulation.jpg" alt="Jessi Triangulation">
+                <div class="image-caption">Triangulation of Jessi</div>
+            </div>
+        </div>
+
+        <!-- Part 2: Computing the "Mid-way Face" -->
+        <h2>Part 2: Computing the "Mid-way Face"</h2>
+        <p>
+            In this part, I compute the <strong>mid-way face</strong> by blending two images (Kelvin's and Jessi's faces). The process involves three main steps:
+        </p>
+        <ol>
+            <li><strong>Average Shape:</strong> I first calculate the average shape by averaging the positions of corresponding points from both faces. This gives us a set of keypoints representing the mid-way shape between the two faces.</li>
+            <li><strong>Warping:</strong> Each triangle in the Delaunay triangulation is warped from both original images into the mid-way shape. An affine transformation matrix is computed for each triangle, and bilinear interpolation is used to map pixels from the original images into the new shape.</li>
+            <li><strong>Averaging Colors:</strong> After warping, I compute the final mid-way face by averaging the pixel colors from the two warped images.</li>
+        </ol>
+        <p>
+            This results in a blended face that incorporates both geometrical and color features from the original images. Below, I display the original images (A and B) and the computed mid-way face.
+        </p>
+
+        <!-- Images for part 2: Kelvin, Midway face, Jessi side by side -->
+        <div class="images">
+            <div class="image-container">
+                <img src="output3/kelvin_resized.jpg" alt="Kelvin Resized">
+                <div class="image-caption">Kelvin's Face</div>
+            </div>
+            <div class="image-container">
+                <img src="output3/kelvin_jessi_midway.jpg" alt="Kelvin Jessi Midway">
+                <div class="image-caption">Mid-way Face of Kelvin and Jessi</div>
+            </div>
+            <div class="image-container">
+                <img src="output3/jessi_resized.jpg" alt="Jessi Resized">
+                <div class="image-caption">Jessi's Face</div>
+            </div>
+        </div>
+
+        <!-- Part 3: The Morph Sequence -->
+        <h2>Part 3: The Morph Sequence</h2>
+        <p>
+            In this part, I generate a smooth morphing sequence between two images (Kelvin's and Jessi's faces). The morphing process involves two key parameters: <strong>warp_frac</strong> and <strong>dissolve_frac</strong>, both of which vary from 0 to 1 over the sequence of 45 frames.
+        </p>
+        <ol>
+            <li><strong>Warping the Shape:</strong> For each frame, the points in Kelvin's and Jessi's images are gradually shifted from the original positions to the final corresponding positions. The intermediate shapes are computed using the <strong>warp_frac</strong> parameter, which controls how much the shape warps between the two images.</li>
+            <li><strong>Cross-Dissolving:</strong> After the shape is warped, the colors from both images are blended together using the <strong>dissolve_frac</strong> parameter. This cross-dissolving controls the appearance of the intermediate face by smoothly blending the pixel colors between the two images.</li>
+            <li><strong>Frame Generation:</strong> For each of the 45 frames, I compute the warped and blended image and save them as intermediate frames in both video and GIF formats. Specific frames are saved as individual images to showcase key moments in the morphing process.</li>
+        </ol>
+        <p>
+            This method creates a seamless transition from one face to the other by controlling both the shape transformation and color blending at each stage of the morphing sequence.
+        </p>
+
+        <!-- Images for part 3: Five frames side by side -->
+        <div class="images">
+            <div class="image-container">
+                <img src="output3/kelvin_jessi_0.jpg" alt="Frame 0">
+                <div class="image-caption">Frame 0</div>
+            </div>
+            <div class="image-container">
+                <img src="output3/kelvin_jessi_11.jpg" alt="Frame 11">
+                <div class="image-caption">Frame 11</div>
+            </div>
+            <div class="image-container">
+                <img src="output3/kelvin_jessi_22.jpg" alt="Frame 22">
+                <div class="image-caption">Frame 22</div>
+            </div>
+            <div class="image-container">
+                <img src="output3/kelvin_jessi_33.jpg" alt="Frame 33">
+                <div class="image-caption">Frame 33</div>
+            </div>
+            <div class="image-container">
+                <img src="output3/kelvin_jessi_45.jpg" alt="Frame 45">
+                <div class="image-caption">Frame 45</div>
+            </div>
+        </div>
+
+        <!-- GIF below the five images -->
+        <div class="gif-container">
+            <img src="output3/morphed.gif" alt="Morphing Sequence GIF">
+            <div class="image-caption">Full Morphing Sequence</div>
+        </div>
+
+        <!-- Part 4: The "Mean Face" of a Population -->
+        <h2>Part 4: The "Mean Face" of a Population</h2>
+        <p>
+            In this part of the project, I used a dataset of annotated faces (the Danes dataset) to analyze and morph faces between different geometries.
+        </p>
+
+        <p>
+            I computed the average <strong>face shape</strong> by calculating the mean of the keypoints from all faces in the dataset. This average shape represents the geometric structure that all individual faces are warped into.
+        </p>
+            
+        <p>
+            I computed them by dividing into two categories: <strong>male</strong> and <strong>female</strong>.
+        </p>
+
+        <!-- Row for average shape: m and f -->
+        <div class="row">
+            <div class="image-group">
+                <img src="output3/average_shape_m_faces.jpg" alt="Average Shape M Faces">
+                <div class="caption">Average Shape of Male Faces</div>
+            </div>
+            <div class="image-group">
+                <img src="output3/average_shape_f_faces.jpg" alt="Average Shape F Faces">
+                <div class="caption">Average Shape of Female Faces</div>
+            </div>
+        </div>
+
+        <p>
+            Then, I morph each of the faces in the dataset into the average shape. Some examples are shown below.
+        </p>
+
+        <!-- First row of images -->
+        <div class="row">
+            <div class="image-group">
+                <img src="output3/01-1m.bmp" alt="Original Image 1">
+                <div class="caption">01-1m Original</div>
+            </div>
+            <div class="image-group">
+                <img src="output3/01-1m_morphed.jpg" alt="Morphed Image 1">
+                <div class="caption">01-1m Morphed</div>
+            </div>
+
+            <div class="image-group">
+                <img src="output3/05-1m.bmp" alt="Original Image 2">
+                <div class="caption">05-1m Original</div>
+            </div>
+            <div class="image-group">
+                <img src="output3/05-1m_morphed.jpg" alt="Morphed Image 2">
+                <div class="caption">05-1m Morphed</div>
+            </div>
+        </div>
+
+        <!-- Second row of images -->
+        <div class="row">
+            <div class="image-group">
+                <img src="output3/07-1m.bmp" alt="Original Image 3">
+                <div class="caption">07-1m Original</div>
+            </div>
+            <div class="image-group">
+                <img src="output3/07-1m_morphed.jpg" alt="Morphed Image 3">
+                <div class="caption">07-1m Morphed</div>
+            </div>
+
+            <div class="image-group">
+                <img src="output3/08-1f.bmp" alt="Original Image 4">
+                <div class="caption">08-1f Original</div>
+            </div>
+            <div class="image-group">
+                <img src="output3/08-1f_morphed.jpg" alt="Morphed Image 4">
+                <div class="caption">08-1f Morphed</div>
+            </div>
+        </div>
+
+        <!-- Third row of images -->
+        <div class="row">
+            <div class="image-group">
+                <img src="output3/12-1f.bmp" alt="Original Image 5">
+                <div class="caption">12-1f Original</div>
+            </div>
+            <div class="image-group">
+                <img src="output3/12-1f_morphed.jpg" alt="Morphed Image 5">
+                <div class="caption">12-1f Morphed</div>
+            </div>
+
+            <div class="image-group">
+                <img src="output3/14-1f.bmp" alt="Original Image 6">
+                <div class="caption">14-1f Original</div>
+            </div>
+            <div class="image-group">
+                <img src="output3/14-1f_morphed.jpg" alt="Morphed Image 6">
+                <div class="caption">14-1f Morphed</div>
+            </div>
+        </div>
+
+        <p>
+            By averaging each of the warped images from two gender, I can obtain the average face of all Danes males and females.
+        </p>
+
+        <!-- Row for average face: m and f -->
+        <div class="row">
+            <div class="image-group">
+                <img src="output3/average_face_m_faces.jpg" alt="Average Face M Faces">
+                <div class="caption">Average Danes Male Face</div>
+            </div>
+            <div class="image-group">
+                <img src="output3/average_face_f_faces.jpg" alt="Average Face F Faces">
+                <div class="caption">Average Danes Female Face</div>
+            </div>
+        </div>
+
+        <p>
+            I used the keypoint correspondences between Kelvin's face and the average Danes male face. Again, I applied Delaunay triangulation to divide the faces into triangles. An affine transformation was then computed for each triangle to warp Kelvin's face into the average Danes male face's shape. The warped image represents Kelvin's facial features, but transformed to the average Danes male face geometry.
+        </p>
+
+        <!-- Row 1: Kelvin to Average Male -->
+        <div class="row">
+            <div class="image-group">
+                <img src="output3/kelvin_part4.jpg" alt="Kelvin Resized">
+                <div class="caption">Kelvin's Face</div>
+            </div>
+            <div class="image-group">
+                <img src="output3/average_face_m_faces.jpg" alt="Average Male Face">
+                <div class="caption">Average Danes Male Face</div>
+            </div>
+            <div class="image-group">
+                <img src="output3/kelvin_to_average_male.jpg" alt="Kelvin to Average Male">
+                <div class="caption">Kelvin Morphed to Average Male</div>
+            </div>
+        </div>
+
+        <p>
+            Similarly, the average Danes male face was warped into Kelvin's geometry using affine transformations. The resulting image shows the average Danes male face, but with the overall geometry of Kelvin's face.
+        </p>
+
+        <!-- Row 2: Average Male to Kelvin -->
+        <div class="row">
+            <div class="image-group">
+                <img src="output3/average_face_m_faces.jpg" alt="Average Male Face">
+                <div class="caption">Average Danes Male Face</div>
+            </div>
+            <div class="image-group">
+                <img src="output3/kelvin_part4.jpg" alt="Kelvin Resized">
+                <div class="caption">Kelvin's Face</div>
+            </div>
+            <div class="image-group">
+                <img src="output3/average_male_to_kelvin.jpg" alt="Average Male to Kelvin">
+                <div class="caption">Average Male Morphed to Kelvin</div>
+            </div>
+        </div>
+
+        <!-- Part 5: Caricatures: Extrapolating from the Mean -->
+        <h2>Part 5: Caricatures: Extrapolating from the Mean</h2>
+        <p>
+            In this part, I explore caricature generation by exaggerating or diminishing certain facial features using an extrapolation parameter, <strong>alpha</strong>. Alpha controls how much I exaggerate or contract the difference between the original face and the average face. Below are the results for values of alpha ranging from -1.0 to 2.0.
+        </p>
+
+        <!-- Row 1: Two caricature images -->
+        <div class="row">
+            <div class="image-group">
+                <img src="output3/kelvin_caricatures_0.png" alt="Caricature Alpha = -1.0">
+                <div class="caption">Alpha = -1.0</div>
+            </div>
+            <div class="image-group">
+                <img src="output3/kelvin_caricatures_1.png" alt="Caricature Alpha = -0.5">
+                <div class="caption">Alpha = -0.5</div>
+            </div>
+        </div>
+
+        <!-- Row 2: Two caricature images -->
+        <div class="row">
+            <div class="image-group">
+                <img src="output3/kelvin_caricatures_2.png" alt="Caricature Alpha = 0.0">
+                <div class="caption">Alpha = 0.0</div>
+            </div>
+            <div class="image-group">
+                <img src="output3/kelvin_caricatures_3.png" alt="Caricature Alpha = 0.5">
+                <div class="caption">Alpha = 0.5</div>
+            </div>
+        </div>
+
+        <!-- Row 3: Three caricature images -->
+        <div class="row">
+            <div class="image-group">
+                <img src="output3/kelvin_caricatures_4.png" alt="Caricature Alpha = 1.0">
+                <div class="caption">Alpha = 1.0</div>
+            </div>
+            <div class="image-group">
+                <img src="output3/kelvin_caricatures_5.png" alt="Caricature Alpha = 1.5">
+                <div class="caption">Alpha = 1.5</div>
+            </div>
+            <div class="image-group">
+                <img src="output3/kelvin_caricatures_6.png" alt="Caricature Alpha = 2.0">
+                <div class="caption">Alpha = 2.0</div>
+            </div>
+        </div>
+
+        <h2>Extra: Bells and Whistles</h2>
+        <p>
+            For the Bells and Whistles of this project, I used a image of the average Chinese actress that I found online. I changed the gender of my face by morphing just the shape, just the appearance, and both. The results are displayed below.
+        </p>
+
+        <!-- First row: kelvin_bell.jpg and average_chinese_actress.jpg -->
+        <div class="row">
+            <div class="image-group">
+                <img src="output3/kelvin_bells.jpg" alt="Kelvin Bell Image">
+                <div class="caption">Kelvin</div>
+            </div>
+            <div class="image-group">
+                <img src="output3/average_chinese_actress.jpg" alt="Average Chinese Actress">
+                <div class="caption">Average Chinese Actress</div>
+            </div>
+        </div>
+
+        <!-- Second row: Warp, Cross-Dissolve, and Both methods -->
+        <div class="row">
+            <div class="image-group">
+                <img src="output3/warp_only.jpg" alt="Warp Only (Kelvin -> Average Shape)">
+                <div class="caption">Shape Only</div>
+            </div>
+            <div class="image-group">
+                <img src="output3/cross_dissolve_only.jpg" alt="Cross-Dissolve Only (Average -> Kelvin Shape)">
+                <div class="caption">Appearance Only</div>
+            </div>
+            <div class="image-group">
+                <img src="output3/warp_and_cross_dissolve.jpg" alt="Warp & Cross-Dissolve (Both)">
+                <div class="caption">Both Shape and Appearance</div>
+            </div>
+        </div>
+
+
+    </div>
+
+</body>
+</html>
