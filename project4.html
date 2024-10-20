@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project 4: Image Warping and Mosaicing</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 75%;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            font-size: 2.5em;
+        }
+        h2 {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+        p {
+            font-size: 1em;
+            margin-bottom: 20px;
+        }
+        .row {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+        }
+        .image-group {
+            text-align: center;
+        }
+        .image-group img {
+            width: 100%;
+            height: auto;
+            max-width: 400px;
+        }
+        .caption {
+            font-style: italic;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Project 4: Image Warping and Mosaicing</h1>
+        <p><strong>Student Name: Kelvin Huang</strong></p>
+
+        <!-- Part 1: Shoot the Pictures -->
+        <h2>Part 1: Shoot the Pictures</h2>
+        <p>
+            In this part, I captured the following images for use in the rectification and mosaicing process.
+        </p>
+
+        <!-- Row 1: book2 and building.jpg side by side -->
+        <p>For rectification:</p>
+        <div class="row">
+            <div class="image-group">
+                <img src="output4A/book2.jpg" alt="Book2">
+                <div class="caption">A Stat 135 Cheat Sheet on My Bed</div>
+            </div>
+            <div class="image-group">
+                <img src="output4A/building.jpg" alt="Building">
+                <div class="caption">A Building Near Hearst Tennis Court</div>
+            </div>
+        </div>
+
+        <p>For mosaicing:</p>
+        <p>1: A Attraction in China</p>
+        <!-- Row 2: gate1 and gate2 side by side -->
+        <div class="row">
+            <div class="image-group">
+                <img src="output4A/gate1.jpg" alt="Gate1">
+                <div class="caption">A Attraction in China - Left</div>
+            </div>
+            <div class="image-group">
+                <img src="output4A/gate2.jpg" alt="Gate2">
+                <div class="caption">A Attraction in China - Right</div>
+            </div>
+        </div>
+
+        <p>
+            2. Buildings in San Francisco. I took them when I was doing Cal Hacks. It was really fun!!
+        </p>
+        <!-- Row 5: SF1 and SF2 side by side -->
+        <div class="row">
+            <div class="image-group">
+                <img src="output4A/SF1.jpg" alt="SF1">
+                <div class="caption">SF - Left</div>
+            </div>
+            <div class="image-group">
+                <img src="output4A/SF2.jpg" alt="SF2">
+                <div class="caption">SF - Right</div>
+            </div>
+        </div>
+
+        <!-- Row 3: night1 and night2 side by side -->
+        <p>3. Night view out of my dorm window</p>
+        <div class="row">
+            <div class="image-group">
+                <img src="output4A/night1.jpg" alt="Night1">
+                <div class="caption">Night View - Left</div>
+            </div>
+            <div class="image-group">
+                <img src="output4A/night2.jpg" alt="Night2">
+                <div class="caption">Night View - Right</div>
+            </div>
+        </div>
+
+        <!-- Row 4: room1 and room2 side by side -->
+        <p>4. My room</p>
+        <div class="row">
+            <div class="image-group">
+                <img src="output4A/room1.jpg" alt="Room1">
+                <div class="caption">Room - Left</div>
+            </div>
+            <div class="image-group">
+                <img src="output4A/room2.jpg" alt="Room2">
+                <div class="caption">Room - Right</div>
+            </div>
+        </div>
+
+        <!-- Part 2: Recover Homographies -->
+        <h2>Part 2: Recover Homographies</h2>
+        <p>
+            In this part, I computed the homographies between different images by selecting corresponding points in the images. Using these correspondences, I calculated the transformation matrices that map one image onto another. This allows me to align the images geometrically for mosaicing.
+        </p>
+        
+        <p>Below is the pseudocode for computing the homography matrix:</p>
+
+        <code>
+        1. Convert input points (im1_pts, im2_pts) from both images into arrays<br>
+        2. Initialize an empty matrix A<br>
+        3. For each point correspondence:<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;a. Extract (x1, y1) from image 1 and (x2, y2) from image 2<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;b. Add two rows to matrix A using the coordinates (x1, y1) and (x2, y2)<br>
+        4. Apply Singular Value Decomposition (SVD) to matrix A<br>
+        5. Extract the homography vector from the last row of the V matrix from SVD<br>
+        6. Reshape the vector into a 3x3 matrix<br>
+        7. Normalize the matrix by dividing all elements by the bottom-right element<br>
+        8. Return the resulting homography matrix H
+        </code>
+
+
+        <!-- Part 3: Warp the Images -->
+        <h2>Part 3: Warp the Images</h2>
+        <p>
+            With the homographies recovered in Part 2, I warped the images into a common coordinate system. This step involves applying the homographies to transform the perspective of each image so that they align perfectly.
+        </p>
+        
+        <p>Below is the pseudocode for warping the images using the homography matrix:</p>
+
+        <code>
+        1. Extract the image's height and width<br>
+        2. Define the corner points of the image<br>
+        3. Apply the homography matrix H to warp these corner points<br>
+        4. Compute the new bounding box of the warped image<br>
+        5. Calculate the translation matrix to shift the image into the correct position<br>
+        6. Compute the inverse of the translated homography matrix<br>
+        7. Create an empty output image with the new size (based on the warped bounding box)<br>
+        8. For each pixel in the output image:<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;a. Use the inverse homography to find the corresponding source pixel<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;b. Use interpolation to get the pixel value from the source image<br>
+        9. Return the warped image
+        </code>
+
+        <!-- Part 4: Image Rectification -->
+        <h2>Part 4: Image Rectification</h2>
+        <p>
+            In this part, I used manual point selection to identify the four corners of a rectangular object in the original image. Using these selected points, I calculated a homography matrix to transform the image into a rectified view where the object appears front-facing.
+        </p>
+
+        <!-- First row: book2, book2_labeled_1, book2_rectified_1 -->
+        <div class="row">
+            <div class="image-group">
+                <img src="output4A/book2.jpg" alt="Book2">
+                <div class="caption">Original Cheat Sheet Image</div>
+            </div>
+            <div class="image-group">
+                <img src="output4A/book2_labeled_1.jpg" alt="Book2 Labeled">
+                <div class="caption">Cheat Sheet Image with Labeled Points</div>
+            </div>
+            <div class="image-group">
+                <img src="output4A/book2_rectified_1.jpg" alt="Book2 Rectified">
+                <div class="caption">Rectified Cheat Sheet Image</div>
+            </div>
+        </div>
+
+        <!-- Second row: building, building_labeled, building_rectified_1 -->
+        <div class="row">
+            <div class="image-group">
+                <img src="output4A/building.jpg" alt="Building">
+                <div class="caption">Original Building Image</div>
+            </div>
+            <div class="image-group">
+                <img src="output4A/building_labeled.jpg" alt="Building Labeled">
+                <div class="caption">Building Image with Labeled Points</div>
+            </div>
+            <div class="image-group">
+                <img src="output4A/building_rectified_1.jpg" alt="Building Rectified">
+                <div class="caption">Rectified Building Image</div>
+            </div>
+        </div>
+
+        <!-- Part 5: Blend the Images into a Mosaic -->
+        <h2>Part 5: Blend the Images into a Mosaic</h2>
+        <p>
+            Finally, I blended the warped images together into a seamless mosaic. I used feathering techniques to blend overlapping areas smoothly, ensuring the transition between images is natural and continuous. The final result is a single panoramic image constructed from the individual images taken in Part 1.
+        </p>
+
+        <!-- Mosaic Row 1: gate1, gate2, gate1_gate2_mosaic -->
+        <div class="row">
+            <div class="image-group">
+                <img src="output4A/gate1.jpg" alt="Gate1">
+                <div class="caption">Attraction - Left</div>
+            </div>
+            <div class="image-group">
+                <img src="output4A/gate2.jpg" alt="Gate2">
+                <div class="caption">Attraction - Right</div>
+            </div>
+            <div class="image-group">
+                <img src="output4A/gate1_gate2_mosaic.jpg" alt="Gate1 and Gate2 Mosaic">
+                <div class="caption">Attraction Mosaic</div>
+            </div>
+        </div>
+
+        <!-- Mosaic Row 2: SF1, SF2, SF1_SF2_mosaic -->
+        <div class="row">
+            <div class="image-group">
+                <img src="output4A/SF1.jpg" alt="SF1">
+                <div class="caption">SF - Left</div>
+            </div>
+            <div class="image-group">
+                <img src="output4A/SF2.jpg" alt="SF2">
+                <div class="caption">SF - Right</div>
+            </div>
+            <div class="image-group">
+                <img src="output4A/SF1_SF2_mosaic.jpg" alt="SF1 and SF2 Mosaic">
+                <div class="caption">SF Mosaic</div>
+            </div>
+        </div>
+
+        <!-- Mosaic Row 3: Room2, Room1, room2_room1_mosaic -->
+        <div class="row">
+            <div class="image-group">
+                <img src="output4A/room2.jpg" alt="Room2">
+                <div class="caption">Room - Left</div>
+            </div>
+            <div class="image-group">
+                <img src="output4A/room1.jpg" alt="Room1">
+                <div class="caption">Room - Right</div>
+            </div>
+            <div class="image-group">
+                <img src="output4A/room2_room1_mosaic.jpg" alt="Room2 and Room1 Mosaic">
+                <div class="caption">Room Mosaic</div>
+            </div>
+        </div>
+
+        <!-- Mosaic Row 4: Night2, Night1, night1_night2_mosaic -->
+        <div class="row">
+            <div class="image-group">
+                <img src="output4A/night2.jpg" alt="Night2">
+                <div class="caption">Night - Left</div>
+            </div>
+            <div class="image-group">
+                <img src="output4A/night1.jpg" alt="Night1">
+                <div class="caption">Night - Right</div>
+            </div>
+            <div class="image-group">
+                <img src="output4A/night1_night2_mosaic.jpg" alt="Night1 and Night2 Mosaic">
+                <div class="caption">Night Mosaic</div>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>
