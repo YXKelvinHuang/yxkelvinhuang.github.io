@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Project 4: Image Warping and Mosaicing</title>
+    <title>Project 4: Stitching Photo Mosaics</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -22,6 +22,10 @@
             font-size: 1.5em;
             margin-bottom: 10px;
         }
+        h3 {
+            font-size: 1.3em;
+            margin-bottom: 5px;
+        }
         p {
             font-size: 1em;
             margin-bottom: 20px;
@@ -37,7 +41,15 @@
         .image-group img {
             width: 100%;
             height: auto;
-            max-width: 400px;
+            max-width: 500px;
+        }
+        .large-group {
+            text-align: center;
+        }
+        .large-group img {
+            width: 100%;
+            height: auto;
+            max-width: 700px;
         }
         .caption {
             font-style: italic;
@@ -48,8 +60,11 @@
 <body>
 
     <div class="container">
-        <h1>Project 4: Image Warping and Mosaicing</h1>
+        <h1>Project 4: Stitching Photo Mosaics</h1>
         <p><strong>Student Name: Kelvin Huang</strong></p>
+
+        <!-- Project 4A Title -->
+        <h2>Project 4A: Image Warping and Mosaicing</h2>
 
         <!-- Part 1: Shoot the Pictures -->
         <h2>Part 1: Shoot the Pictures</h2>
@@ -57,7 +72,6 @@
             In this part, I captured the following images for use in the rectification and mosaicing process.
         </p>
 
-        <!-- Row 1: book2 and building.jpg side by side -->
         <p>For rectification:</p>
         <div class="row">
             <div class="image-group">
@@ -72,7 +86,6 @@
 
         <p>For mosaicing:</p>
         <p>1: A Attraction in China</p>
-        <!-- Row 2: gate1 and gate2 side by side -->
         <div class="row">
             <div class="image-group">
                 <img src="output4A/gate1.jpg" alt="Gate1">
@@ -84,10 +97,7 @@
             </div>
         </div>
 
-        <p>
-            2. Buildings in San Francisco. I took them when I was doing Cal Hacks. It was really fun!!
-        </p>
-        <!-- Row 5: SF1 and SF2 side by side -->
+        <p>2. Buildings in San Francisco. I took them when I was doing Cal Hacks. It was really fun!!</p>
         <div class="row">
             <div class="image-group">
                 <img src="output4A/SF1.jpg" alt="SF1">
@@ -99,7 +109,6 @@
             </div>
         </div>
 
-        <!-- Row 3: night1 and night2 side by side -->
         <p>3. Night view out of my dorm window</p>
         <div class="row">
             <div class="image-group">
@@ -112,7 +121,6 @@
             </div>
         </div>
 
-        <!-- Row 4: room1 and room2 side by side -->
         <p>4. My room</p>
         <div class="row">
             <div class="image-group">
@@ -146,7 +154,6 @@
         8. Return the resulting homography matrix H
         </code>
 
-
         <!-- Part 3: Warp the Images -->
         <h2>Part 3: Warp the Images</h2>
         <p>
@@ -175,7 +182,6 @@
             In this part, I used manual point selection to identify the four corners of a rectangular object in the original image. Using these selected points, I calculated a homography matrix to transform the image into a rectified view where the object appears front-facing.
         </p>
 
-        <!-- First row: book2, book2_labeled_1, book2_rectified_1 -->
         <div class="row">
             <div class="image-group">
                 <img src="output4A/book2.jpg" alt="Book2">
@@ -191,7 +197,6 @@
             </div>
         </div>
 
-        <!-- Second row: building, building_labeled, building_rectified_1 -->
         <div class="row">
             <div class="image-group">
                 <img src="output4A/building.jpg" alt="Building">
@@ -213,7 +218,6 @@
             Finally, I blended the warped images together into a seamless mosaic. I used feathering techniques to blend overlapping areas smoothly, ensuring the transition between images is natural and continuous. The final result is a single panoramic image constructed from the individual images taken in Part 1.
         </p>
 
-        <!-- Mosaic Row 1: gate1, gate2, gate1_gate2_mosaic -->
         <div class="row">
             <div class="image-group">
                 <img src="output4A/gate1.jpg" alt="Gate1">
@@ -229,7 +233,6 @@
             </div>
         </div>
 
-        <!-- Mosaic Row 2: SF1, SF2, SF1_SF2_mosaic -->
         <div class="row">
             <div class="image-group">
                 <img src="output4A/SF1.jpg" alt="SF1">
@@ -245,23 +248,6 @@
             </div>
         </div>
 
-        <!-- Mosaic Row 3: Room2, Room1, room2_room1_mosaic -->
-        <div class="row">
-            <div class="image-group">
-                <img src="output4A/room2.jpg" alt="Room2">
-                <div class="caption">Room - Left</div>
-            </div>
-            <div class="image-group">
-                <img src="output4A/room1.jpg" alt="Room1">
-                <div class="caption">Room - Right</div>
-            </div>
-            <div class="image-group">
-                <img src="output4A/room2_room1_mosaic.jpg" alt="Room2 and Room1 Mosaic">
-                <div class="caption">Room Mosaic</div>
-            </div>
-        </div>
-
-        <!-- Mosaic Row 4: Night2, Night1, night1_night2_mosaic -->
         <div class="row">
             <div class="image-group">
                 <img src="output4A/night2.jpg" alt="Night2">
@@ -277,6 +263,127 @@
             </div>
         </div>
 
+        <!-- Project 4B Title -->
+        <h2>Project 4B: Feature Matching for Autostitching</h2>
+
+        <!-- Part 1: Detecting Corner Features -->
+        <h2>Part 1: Detecting Corner Features</h2>
+        <h3>Harris Interest Point Detector</h3>
+        <p>
+            I implemented a Harris Interest Point Detector to identify key corner features in the image. The method involves computing the Harris corner response, thresholding the response map to retain significant corners, and refining the results by identifying local maxima within a neighborhood. Additionally, I discarded corners near the image edges to avoid artifacts. The final corner points were extracted and visualized on the image.
+        </p>
+        <div class="image-group">
+            <img src="output4B/formula1.jpg">
+        </div>
+        <p>
+            In this image, I filtered corners that are local maximums of (50, 50) patch and has a h value above 0.25. This is only to better show the result.
+        </p>
+
+        <div class="image-group">
+            <img src="output4B/SF2_Harris.jpg" alt="SF2 Harris">
+            <div class="caption">Harris Interest Points Detected in SF</div>
+        </div>
+
+        <h3>Adaptive Non-Maximal Suppression</h3>
+        <div class="image-group">
+            <img src="output4B/formula2.jpg">
+        </div>
+        <p>
+            I applied Adaptive Non-Maximal Suppression (ANMS) to refine the detected corner features by selecting the most significant ones. The method works by computing a suppression radius for each corner point based on its strength relative to other stronger corners within a specified robustness factor. The radius is defined as the distance to the nearest stronger point. After calculating these radii, I selected the top points with the largest radii, resulting in a refined set of key points.
+        </p>
+        <div class="large-group">
+            <img src="output4B/SF2_ANMS.jpg" alt="SF2 ANMS">
+            <div class="caption">Adaptive Non-Maximal Suppression (Top100) in SF</div>
+        </div>
+
+        <!-- Part 2: Feature Descriptor -->
+        <h2>Part 2: Feature Descriptor</h2>
+        <p>
+            I extracted feature descriptors for each detected keypoint to uniquely characterize them. For each keypoint, I extracted an 8x8 patch of pixel values from a larger 40x40 window centered around the keypoint. The method involves creating these local image patches and applying Gaussian smoothing to reduce noise. Each patch is resized to a smaller, fixed dimension (8x8), and then normalized by subtracting its mean and dividing by its standard deviation. This normalization step helps to create scale-invariant and robust descriptors. The resulting feature descriptors are stored as flattened vectors for further matching.
+        </p>
+        <div class="large-group">
+            <img src="output4B/SF2_Feature_Descriptor.jpg" alt="SF2 Feature Descriptor">
+            <div class="caption">Feature Descriptors for SF</div>
+        </div>
+
+        <!-- Part 3: Feature Matching (Lowe) -->
+        <h2>Part 3: Feature Matching (Lowe)</h2>
+        <p>
+            I implemented feature matching using the Lowe’s ratio test to identify corresponding points between two sets of feature descriptors. For each keypoint, I first extracted a local 3-channel 8x8 patch from a 40x40 window in the original color image. Each patch was resized, normalized, and converted into a descriptor vector. To find matches, I calculated the Euclidean distances between pairs of descriptors from the two images. For each descriptor, I identified its two nearest neighbors and computed the ratio of their distances. By comparing this ratio to a predefined threshold, I selected matches where the closest neighbor was significantly closer than the second, thereby filtering out ambiguous matches. The resulting matches were pairs of keypoints with strong correspondences.
+        </p>
+
+        <div class="row">
+            <div class="image-group">
+                <img src="output4B/SF1_Keypoints_Matches.jpg" alt="SF1 Keypoints Matches">
+                <div class="caption">Keypoint Matches in SF - Left</div>
+            </div>
+            <div class="image-group">
+                <img src="output4B/SF2_Keypoints_Matches.jpg" alt="SF2 Keypoints Matches">
+                <div class="caption">Keypoint Matches in SF - Right</div>
+            </div>
+        </div>
+
+        <div class="large-group">
+            <img src="output4B/SF_Matched_Features.jpg" alt="SF Matched Features">
+            <div class="caption">Matched Features between SF</div>
+        </div>
+
+        <!-- Part 4: RANSAC -->
+        <h2>Part 4: RANSAC</h2>
+        <p>
+            I used RANSAC (Random Sample Consensus) to robustly estimate the homography between two sets of matched keypoints. The RANSAC algorithm works by repeatedly selecting a random subset of four matches to compute a candidate homography. For each candidate, I transformed all keypoints using the homography and calculated the distance between the transformed points and their corresponding keypoints in the second image. Matches with distances below a set threshold were considered inliers. The homography with the most inliers was chosen as the best estimate. This process effectively eliminates outliers and refines the set of matches, ensuring a more accurate transformation between the images.
+        </p>
+        <div class="large-group">
+            <img src="output4B/SF_Before_Ransac.jpg" alt="SF Before RANSAC">
+            <div class="caption">Before Applying RANSAC</div>
+        </div>
+        <div class="large-group">
+            <img src="output4B/SF_Ransac.jpg" alt="SF RANSAC">
+            <div class="caption">After Applying RANSAC</div>
+        </div>
+
+        <!-- Part 5: Mosaics -->
+        <h2>Part 5: Mosaics</h2>
+        <p>
+            Here, I present a comparison between the manually created mosaics and the automatically stitched mosaics. As we can see, the automatic mosaics are even better than manual mosaics! 
+        </p>
+        <div class="row">
+            <div class="image-group">
+                <img src="output4B/SF1_SF2_mosaic.jpg" alt="SF1 SF2 Mosaic">
+                <div class="caption">SF Mosaic - Manual</div>
+            </div>
+            <div class="image-group">
+                <img src="output4B/SF1_SF2_mosaic_automatic.jpg" alt="SF1 SF2 Mosaic Automatic">
+                <div class="caption">SF Mosaic - Automatic</div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="image-group">
+                <img src="output4B/gate1_gate2_mosaic.jpg" alt="Gate1 and Gate2 Mosaic">
+                <div class="caption">Attraction Mosaic - Manual</div>
+            </div>
+            <div class="image-group">
+                <img src="output4B/gate1_gate2_mosaic_automatic.jpg" alt="Gate1 and Gate2 Mosaic Automatic">
+                <div class="caption">Attraction Mosaic - Automatic</div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="image-group">
+                <img src="output4B/night1_night2_mosaic.jpg" alt="Night1 and Night2 Mosaic">
+                <div class="caption">Night Mosaic - Manual</div>
+            </div>
+            <div class="image-group">
+                <img src="output4B/night1_night2_mosaic_automatic.jpg" alt="Night1 and Night2 Mosaic Automatic">
+                <div class="caption">Night Mosaic - Automatic</div>
+            </div>
+        </div>
+
+        <h2>What I learned</h2>
+        <p>
+            The coolest thing I learned from this project is how computer vision algorithms, like feature detection and RANSAC, can seamlessly combine multiple images into a panoramic mosaic. It’s amazing to see how keypoint detection, feature matching, and robust homography estimation come together to align and blend images accurately. This project showed me how these powerful techniques turn complex math into visually stunning and practical results!
+        </p>
     </div>
 
 </body>
