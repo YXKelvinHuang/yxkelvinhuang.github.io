@@ -1,0 +1,43 @@
+name: GitHub Pages Build and Deploy
+
+on:
+  push:
+    branches:
+      - main  # Change to your branch name if different
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check out repository
+      uses: actions/checkout@v2
+
+    - name: Setup Pages
+      id: pages
+      uses: actions/configure-pages@v2
+
+    - name: Build project
+      run: |
+        # Add your build steps here if you are using a static site generator
+        # For example, for Jekyll:
+        # bundle install
+        # bundle exec jekyll build
+
+        # If it's a plain HTML/CSS/JS site, skip the above steps
+
+    - name: Upload artifact for deployment
+      uses: actions/upload-pages-artifact@v2
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+
+    steps:
+    - name: Deploy to GitHub Pages
+      id: deploy
+      uses: actions/deploy-pages@v2
+
