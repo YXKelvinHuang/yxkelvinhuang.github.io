@@ -1,0 +1,1216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project: Exploring Diffusion Models</title>
+    <script type="text/javascript" async
+    src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 75%;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            font-size: 2.5em;
+        }
+        h2 {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+        h3 {
+            font-size: 1.3em;
+            margin-bottom: 5px;
+        }
+        p {
+            font-size: 1em;
+            margin-bottom: 20px;
+        }
+        .row {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+        }
+        .image-group {
+            text-align: center;
+        }
+        .image-group img {
+            width: 250px; /* Set a consistent width */
+            height: 250px; /* Set a consistent height */
+            object-fit: cover; /* Ensures images fill the dimensions without distortion */
+        }
+        .large-group {
+            text-align: center;
+        }
+        .large-group img {
+            width: 130%;
+            height: auto;
+            max-width: 1100px;
+        }
+        .large-group2 img {
+            width: 95%;
+            height: auto;
+            max-width: 1100px;
+        }
+        .caption {
+            font-style: italic;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Project: Exploring Diffusion Models</h1>
+        <p><strong>Student Name: Kelvin Huang</strong></p>
+
+        <!-- Part A Title -->
+        <h2>Part A: The Power of Diffusion Models!</h2>
+
+        <!-- Subsection 1 -->
+        <h2>Part 0: Setup</h2>
+        <p>
+            We use the DeepFloyd IF diffusion model, a two-stage text-to-image model by Stability AI. The first stage generates small images, and the second refines them to higher resolutions. 
+        </p>
+        
+        <p>
+            My <strong>random seed</strong> is <strong>180</strong> throughout the project.
+        </p>        
+
+
+        <h3>Inference Steps: 20</h3>
+
+        <h4>Size: 64x64</h4>
+        <div class="row">
+            <div class="image-group">
+                <img src="output5/part0_man_hat_64.png" alt="Man Hat 64x64">
+                <div class="caption">A man wearing a hat</div>
+            </div>
+            <div class="image-group">
+                <img src="output5/part0_oil_painting_64.png" alt="Oil Painting 64x64">
+                <div class="caption">An oil painting of a snowy mountain village</div>
+            </div>
+            <div class="image-group">
+                <img src="output5/part0_rocket_ship_64.png" alt="Rocket Ship 64x64">
+                <div class="caption">A rocket ship</div>
+            </div>
+        </div>
+        
+        <h4>Size: 256x256</h4>
+        <div class="row">
+            <div class="image-group">
+                <img src="output5/part0_man_hat_256.png" alt="Man Hat 256x256">
+                <div class="caption">A man wearing a hat</div>
+            </div>
+            <div class="image-group">
+                <img src="output5/part0_oil_painting_256.png" alt="Oil Painting 256x256">
+                <div class="caption">An oil painting of a snowy mountain village</div>
+            </div>
+            <div class="image-group">
+                <img src="output5/part0_rocket_ship_256.png" alt="Rocket Ship 256x256">
+                <div class="caption">A rocket ship</div>
+            </div>
+        </div>
+        
+        <h3>Inference Steps: 80</h3>
+        
+        <h4>Size: 64x64</h4>
+        <div class="row">
+            <div class="image-group">
+                <img src="output5/part0_man_hat_64_80.png" alt="Man Hat 64x64 80 Steps">
+                <div class="caption">A man wearing a hat</div>
+            </div>
+            <div class="image-group">
+                <img src="output5/part0_oil_painting_64_80.png" alt="Oil Painting 64x64 80 Steps">
+                <div class="caption">An oil painting of a snowy mountain village</div>
+            </div>
+            <div class="image-group">
+                <img src="output5/part0_rocket_ship_64_80.png" alt="Rocket Ship 64x64 80 Steps">
+                <div class="caption">A rocket ship</div>
+            </div>
+        </div>
+        
+        <h4>Size: 256x256</h4>
+        <div class="row">
+            <div class="image-group">
+                <img src="output5/part0_man_hat_256_80.png" alt="Man Hat 256x256 80 Steps">
+                <div class="caption">A man wearing a hat</div>
+            </div>
+            <div class="image-group">
+                <img src="output5/part0_oil_painting_256_80.png" alt="Oil Painting 256x256 80 Steps">
+                <div class="caption">An oil painting of a snowy mountain village</div>
+            </div>
+            <div class="image-group">
+                <img src="output5/part0_rocket_ship_256_80.png" alt="Rocket Ship 256x256 80 Steps">
+                <div class="caption">A rocket ship</div>
+            </div>
+        </div>
+
+        <h4>Reflection:</h4>
+        <p>
+            At a lower resolution (64x64 from Stage 1), the outputs capture the basic structure and color scheme corresponding to the prompts but lack fine details, resulting in somewhat abstract representations. In contrast, the higher resolution (256x256 from Stage 2) images refine these initial representations, adding significant detail and texture, resulting in visually coherent outputs. Varying num_inference_steps (e.g., from 20 to 80) reveals a trade-off: fewer steps produce faster but less refined results, while more steps improve the quality at the expense of computation time. 
+        </p>
+
+
+        <h2>Part 1: Sampling Loops</h2>
+        <p>
+            Diffusion models generate images by reversing a noise-adding process. Starting with a clean image \( x_0 \), noise is iteratively added at each timestep \( t \), creating progressively noisier images \( x_t \) until reaching pure noise at \( t = T \). The goal of the diffusion model is to predict and remove this noise step-by-step, enabling the reconstruction of \( x_0 \) or partially denoised versions like \( x_{t-1} \).
+        </p>
+        <p>
+            The generation process begins with a pure Gaussian noise sample \( x_T \) at \( T = 1000 \) (for DeepFloyd). Using learned noise coefficients \( \bar{\alpha}_t \), the model estimates the noise in \( x_t \), which is then subtracted to obtain a cleaner image for the previous timestep. This iterative sampling continues until a clean image \( x_0 \) is reconstructed. The noise coefficients \( \bar{\alpha}_t \) and the denoising steps are pre-determined during training.
+        </p>
+        <h3>Part 1.1: Implementing the Forward Process</h3>
+
+        <p>
+            A key component of diffusion models is the forward process, which takes a clean image \( x_0 \) and progressively adds noise to it, resulting in noisy versions \( x_t \) at each timestep \( t \). This process is defined mathematically as:
+        </p>
+        
+        <p style="text-align: center;">
+            \( q(x_t | x_0) = \mathcal{N}(x_t; \sqrt{\bar{\alpha}_t} x_0, (1 - \bar{\alpha}_t) \mathbf{I}) \)
+        </p>
+        
+        <p>
+            This is equivalent to computing:
+        </p>
+        
+        <p style="text-align: center;">
+            \( x_t = \sqrt{\bar{\alpha}_t} x_0 + \sqrt{1 - \bar{\alpha}_t} \epsilon \),
+        </p>
+        
+        <p>
+            where \( \epsilon \sim \mathcal{N}(0, 1) \). Here, \( x_t \) is sampled from a Gaussian distribution with mean \( \sqrt{\bar{\alpha}_t} x_0 \) and variance \( (1 - \bar{\alpha}_t) \). Note that the forward process involves both adding noise and scaling the original image \( x_0 \) by \( \sqrt{\bar{\alpha}_t} \).
+        </p>
+
+        <div class="row">
+            <div class="image-group">
+                <img src="output5/part1.1_original.png" alt="Campanile Original Picture">
+                <div class="caption">Campanile original picture</div>
+            </div>
+            <div class="image-group">
+                <img src="output5/part1.1_250.png" alt="Campanile at Noise = 250">
+                <div class="caption">Campanile at noise = 250</div>
+            </div>
+            <div class="image-group">
+                <img src="output5/part1.1_500.png" alt="Campanile at Noise = 500">
+                <div class="caption">Campanile at noise = 500</div>
+            </div>
+            <div class="image-group">
+                <img src="output5/part1.1_750.png" alt="Campanile at Noise = 750">
+                <div class="caption">Campanile at noise = 750</div>
+            </div>
+        </div>        
+
+        <h3>Part 1.2: Classical Denoising</h3>
+
+        <p>
+            Trying to use Gaussian blur filtering to try to remove the noise above.
+        </p>
+
+        <!-- Images from Part 1.1 -->
+        <div class="row">
+            <div class="image-group">
+                <img src="output5/part1.1_250.png" alt="Campanile at Noise = 250">
+                <div class="caption">Noisy Campanile at \( t = 250 \)</div>
+            </div>
+            <div class="image-group">
+                <img src="output5/part1.1_500.png" alt="Campanile at Noise = 500">
+                <div class="caption">Noisy Campanile at \( t = 500 \)</div>
+            </div>
+            <div class="image-group">
+                <img src="output5/part1.1_750.png" alt="Campanile at Noise = 750">
+                <div class="caption">Noisy Campanile at \( t = 750 \)</div>
+            </div>
+        </div>
+
+        <!-- Gaussian Blur Results -->
+        <div class="row">
+            <div class="image-group">
+                <img src="output5/part1.2_250.png" alt="Gaussian Blur at Noise = 250">
+                <div class="caption">Gaussian Blur at \( t = 250 \)</div>
+            </div>
+            <div class="image-group">
+                <img src="output5/part1.2_500.png" alt="Gaussian Blur at Noise = 500">
+                <div class="caption">Gaussian Blur at \( t = 500 \)</div>
+            </div>
+            <div class="image-group">
+                <img src="output5/part1.2_750.png" alt="Gaussian Blur at Noise = 750">
+                <div class="caption">Gaussian Blur at \( t = 750 \)</div>
+            </div>
+        </div>
+
+        <p>
+            In applying Gaussian blur, we used a kernel size of \( 7 \) and a standard deviation (\( \sigma \)) of \( 1.3 \). While this method reduced some noise effectively, it also blurred important details, showing the limitations of classical denoising techniques.
+        </p>
+
+        <h3>Part 1.3: One-Step Denoising</h3>
+
+        <p>
+            Used a pretrained diffusion model to denoise the images. The denoiser, available at stage_1.unet, is a U-Net architecture trained on a large dataset of \((x_0, x_t)\) image pairs. This model predicts and removes Gaussian noise from noisy images, effectively reconstructing (or approximating) the original clean image \(x_0\).This U-Net is conditioned on the timestep \(t\).
+        </p>
+
+        <!-- Noisy Images (Part 1.1) -->
+        <div class="row">
+            <div class="image-group">
+                <img src="output5/part1.1_250.png" alt="Noisy Campanile at t=250">
+                <div class="caption">Noisy Campanile at \( t = 250 \)</div>
+            </div>
+            <div class="image-group">
+                <img src="output5/part1.1_500.png" alt="Noisy Campanile at t=500">
+                <div class="caption">Noisy Campanile at \( t = 500 \)</div>
+            </div>
+            <div class="image-group">
+                <img src="output5/part1.1_750.png" alt="Noisy Campanile at t=750">
+                <div class="caption">Noisy Campanile at \( t = 750 \)</div>
+            </div>
+        </div>
+
+        <!-- Denoised Images (Part 1.3) -->
+        <div class="row">
+            <div class="image-group">
+                <img src="output5/part1.3_250.png" alt="Denoised Campanile at t=250">
+                <div class="caption">Campanile at \( t = 250 \) with One-Step Denoiser</div>
+            </div>
+            <div class="image-group">
+                <img src="output5/part1.3_500.png" alt="Denoised Campanile at t=500">
+                <div class="caption">Campanile at \( t = 500 \) with One-Step Denoiser</div>
+            </div>
+            <div class="image-group">
+                <img src="output5/part1.3_750.png" alt="Denoised Campanile at t=750">
+                <div class="caption">Campanile at \( t = 750 \) with One-Step Denoiser</div>
+            </div>
+        </div>
+
+        <h3>Part 1.4: Iterative Denoising</h3>
+
+        <p>
+            To efficiently denoise images iteratively, we can create a list of timesteps, called <code>strided_timesteps</code>, which skips steps in the denoising process. 
+            This list starts with the noisiest image (highest \( t \)) and ends with the clean image (lowest \( t \)), such that <code>strided_timesteps[-1]</code> corresponds to a clean image. 
+            A simple approach is to use a regular stride step (e.g., a stride of 30 works well).
+        </p>
+
+        <p>
+            On the \( i \)-th denoising step, we are at \( t = \text{strided_timesteps}[i] \), and want to get to \( t' = \text{strided_timesteps}[i+1] \) (a less noisy image). 
+            The denoising step is computed using the formula:
+        </p>
+
+        <p style="text-align: center;">
+            \( x_{t'} = \frac{\sqrt{\bar{\alpha}_{t'}\beta_t}}{1 - \bar{\alpha}_t} x_0 + \frac{\sqrt{\alpha_t}(1 - \bar{\alpha}_{t'})}{1 - \bar{\alpha}_t} x_t + \nu_{\sigma} \)
+        </p>
+
+        <p>
+            Where:
+            <ul>
+                <li>\( x_t \): The image at timestep \( t \).</li>
+                <li>\( x_{t'} \): The denoised image at the next timestep \( t' \) (less noisy).</li>
+                <li>\( \bar{\alpha}_t \): Defined by the cumulative product of alphas, <code>alphas_cumprod</code>.</li>
+                <li>\( \alpha_t = \frac{\bar{\alpha}_t}{\bar{\alpha}_{t'}} \).</li>
+                <li>\( \beta_t = 1 - \alpha_t \).</li>
+                <li>\( x_0 \): The current estimate of the clean image (as computed in Section 1.3).</li>
+                <li>\( \nu_{\sigma} \): Random noise, also predicted by the model.</li>
+            </ul>
+        </p>
+
+        <p>
+            The random noise term \( \nu_{\sigma} \) is predicted by the model (e.g., DeepFloyd), and the exact process to compute it is abstracted using the <code>add_variance</code> function. 
+            This iterative approach progressively refines the image, transitioning from noise to a clean approximation.
+        </p>
+
+        <div class="row">
+            <div class="image-group">
+                <img src="output5/part1.4_clean.png" alt="Iteratively Denoised Campanile">
+                <div class="caption">Iteratively Denoised Campanile</div>
+            </div>
+            <div class="image-group">
+                <img src="output5/part1.4_90.png" alt="Noisy Campanile at t=90">
+                <div class="caption">Noisy Campanile at \( t = 90 \)</div>
+            </div>
+            <div class="image-group">
+                <img src="output5/part1.4_240.png" alt="Noisy Campanile at t=240">
+                <div class="caption">Noisy Campanile at \( t = 240 \)</div>
+            </div>
+        </div>
+        
+        <!-- Second Row: Noisy Images -->
+        <div class="row">
+            <div class="image-group">
+                <img src="output5/part1.4_390.png" alt="Noisy Campanile at t=390">
+                <div class="caption">Noisy Campanile at \( t = 390 \)</div>
+            </div>
+            <div class="image-group">
+                <img src="output5/part1.4_540.png" alt="Noisy Campanile at t=540">
+                <div class="caption">Noisy Campanile at \( t = 540 \)</div>
+            </div>
+            <div class="image-group">
+                <img src="output5/part1.4_690.png" alt="Noisy Campanile at t=690">
+                <div class="caption">Noisy Campanile at \( t = 690 \)</div>
+            </div>
+        </div>
+        
+        <!-- Third Row: Comparison -->
+        <div class="row">
+            <div class="image-group">
+                <img src="output5/part1.4_original.png" alt="Original Campanile">
+                <div class="caption">Original Campanile</div>
+            </div>
+            <div class="image-group">
+                <img src="output5/part1.4_one_step.png" alt="One-Step Denoised Campanile">
+                <div class="caption">One-Step Denoised Campanile</div>
+            </div>
+            <div class="image-group">
+                <img src="output5/part1.4_gaussian_blurred.png" alt="Gaussian Blurred Campanile">
+                <div class="caption">Gaussian Blurred Campanile</div>
+            </div>
+        </div>
+
+        <h3>Part 1.5: Diffusion Model Sampling</h3>
+
+        <p>
+            By setting <code>i_start = 0</code> and passing in random noise, we use the diffusion model to generate images from scratch. The process iteratively refines the noisy input into coherent images, as demonstrated below.
+        </p>
+
+        <!-- First Row -->
+        <div class="row">
+            <div class="image-group">
+                <img src="output5/part1.5_1.png" alt="Generated Image 1">
+                <div class="caption">Generated Image 1</div>
+            </div>
+            <div class="image-group">
+                <img src="output5/part1.5_2.png" alt="Generated Image 2">
+                <div class="caption">Generated Image 2</div>
+            </div>
+            <div class="image-group">
+                <img src="output5/part1.5_3.png" alt="Generated Image 3">
+                <div class="caption">Generated Image 3</div>
+            </div>
+        </div>
+
+        <!-- Second Row -->
+        <div class="row">
+            <div class="image-group">
+                <img src="output5/part1.5_4.png" alt="Generated Image 4">
+                <div class="caption">Generated Image 4</div>
+            </div>
+            <div class="image-group">
+                <img src="output5/part1.5_5.png" alt="Generated Image 5">
+                <div class="caption">Generated Image 5</div>
+            </div>
+        </div>
+
+        <h3>Part 1.6: Classifier-Free Guidance (CFG)</h3>
+
+        <p>
+            We noticed that the generated images in the prior section are not very good, and some are completely nonsensical. To improve the quality of the generated images, we use a technique called Classifier-Free Guidance (CFG).
+        </p>
+
+        <p>
+            In CFG, we compute both a conditional and an unconditional noise estimate. We denote these as \( \epsilon_c \) and \( \epsilon_u \). Then, we let our new noise estimate be:
+        </p>
+
+        <p style="text-align: center;">
+            \( \epsilon = \epsilon_u + \gamma (\epsilon_c - \epsilon_u) \)
+        </p>
+
+        <p>
+            Where \( \gamma \) controls the strength of CFG. Notice that for \( \gamma = 0 \), we get an unconditional noise estimate, and for \( \gamma = 1 \), we get the conditional noise estimate. 
+            The magic happens when \( \gamma > 1 \). In this case, we get much higher-quality images.
+        </p>
+
+        <p>
+            Some images at \( \gamma = 7\)
+        </p>
+
+        <div class="row">
+            <div class="image-group">
+                <img src="output5/part1.6_1.png" alt="Generated Image 1 with CFG">
+                <div class="caption">Generated Image 1</div>
+            </div>
+            <div class="image-group">
+                <img src="output5/part1.6_2.png" alt="Generated Image 2 with CFG">
+                <div class="caption">Generated Image 2</div>
+            </div>
+            <div class="image-group">
+                <img src="output5/part1.6_3.png" alt="Generated Image 3 with CFG">
+                <div class="caption">Generated Image 3</div>
+            </div>
+        </div>
+        
+        <!-- Second Row -->
+        <div class="row">
+            <div class="image-group">
+                <img src="output5/part1.6_4.png" alt="Generated Image 4 with CFG">
+                <div class="caption">Generated Image 4</div>
+            </div>
+            <div class="image-group">
+                <img src="output5/part1.6_5.png" alt="Generated Image 5 with CFG">
+                <div class="caption">Generated Image 5</div>
+            </div>
+        </div>
+
+        <h3>Part 1.7: Image-to-Image Translation</h3>
+
+        <p>
+            In this task, we take the original test image, add a little noise, and force it back onto the image manifold without any conditioning. 
+            This process generates images that are similar to the test image but reflect slight variations based on the added noise.
+        </p>
+
+        <p>
+            Test Image: Campanile
+        </p>
+
+        <!-- First Row -->
+        <div class="row">
+            <div class="image-group">
+                <img src="output5/part1.7_test_1.png" alt="Image with i_start=1">
+                <div class="caption">Image with \( i_{\text{start}} = 1 \)</div>
+            </div>
+            <div class="image-group">
+                <img src="output5/part1.7_test_3.png" alt="Image with i_start=3">
+                <div class="caption">Image with \( i_{\text{start}} = 3 \)</div>
+            </div>
+            <div class="image-group">
+                <img src="output5/part1.7_test_5.png" alt="Image with i_start=5">
+                <div class="caption">Image with \( i_{\text{start}} = 5 \)</div>
+            </div>
+            <div class="image-group">
+                <img src="output5/part1.7_test_7.png" alt="Image with i_start=7">
+                <div class="caption">Image with \( i_{\text{start}} = 7 \)</div>
+            </div>
+        </div>
+
+        <!-- Second Row -->
+        <div class="row">
+            <div class="image-group">
+                <img src="output5/part1.7_test_10.png" alt="Image with i_start=10">
+                <div class="caption">Image with \( i_{\text{start}} = 10 \)</div>
+            </div>
+            <div class="image-group">
+                <img src="output5/part1.7_test_20.png" alt="Image with i_start=20">
+                <div class="caption">Image with \( i_{\text{start}} = 20 \)</div>
+            </div>
+            <div class="image-group">
+                <img src="output5/part1.7_test_original.png" alt="Original Test Image">
+                <div class="caption">Original Test Image</div>
+            </div>
+        </div>
+
+        <p>
+            My choice 1: Butterfly and Flower
+        </p>
+
+        <div class="row">
+            <div class="image-group">
+                <img src="output5/part1.7_1_1.png" alt="Set 1 Image with i_start=1">
+                <div class="caption">Set 1: Image with \( i_{\text{start}} = 1 \)</div>
+            </div>
+            <div class="image-group">
+                <img src="output5/part1.7_1_3.png" alt="Set 1 Image with i_start=3">
+                <div class="caption">Set 1: Image with \( i_{\text{start}} = 3 \)</div>
+            </div>
+            <div class="image-group">
+                <img src="output5/part1.7_1_5.png" alt="Set 1 Image with i_start=5">
+                <div class="caption">Set 1: Image with \( i_{\text{start}} = 5 \)</div>
+            </div>
+            <div class="image-group">
+                <img src="output5/part1.7_1_7.png" alt="Set 1 Image with i_start=7">
+                <div class="caption">Set 1: Image with \( i_{\text{start}} = 7 \)</div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="image-group">
+                <img src="output5/part1.7_1_10.png" alt="Set 1 Image with i_start=10">
+                <div class="caption">Set 1: Image with \( i_{\text{start}} = 10 \)</div>
+            </div>
+            <div class="image-group">
+                <img src="output5/part1.7_1_20.png" alt="Set 1 Image with i_start=20">
+                <div class="caption">Set 1: Image with \( i_{\text{start}} = 20 \)</div>
+            </div>
+            <div class="image-group">
+                <img src="output5/part1.7_1_original.png" alt="Set 1 Original Image">
+                <div class="caption">Set 1: Original Test Image</div>
+            </div>
+        </div>
+
+        <p>
+            My choice 2: Cat
+        </p>
+
+        <div class="row">
+            <div class="image-group">
+                <img src="output5/part1.7_2_1.png" alt="Set 2 Image with i_start=1">
+                <div class="caption">Set 2: Image with \( i_{\text{start}} = 1 \)</div>
+            </div>
+            <div class="image-group">
+                <img src="output5/part1.7_2_3.png" alt="Set 2 Image with i_start=3">
+                <div class="caption">Set 2: Image with \( i_{\text{start}} = 3 \)</div>
+            </div>
+            <div class="image-group">
+                <img src="output5/part1.7_2_5.png" alt="Set 2 Image with i_start=5">
+                <div class="caption">Set 2: Image with \( i_{\text{start}} = 5 \)</div>
+            </div>
+            <div class="image-group">
+                <img src="output5/part1.7_2_7.png" alt="Set 2 Image with i_start=7">
+                <div class="caption">Set 2: Image with \( i_{\text{start}} = 7 \)</div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="image-group">
+                <img src="output5/part1.7_2_10.png" alt="Set 2 Image with i_start=10">
+                <div class="caption">Set 2: Image with \( i_{\text{start}} = 10 \)</div>
+            </div>
+            <div class="image-group">
+                <img src="output5/part1.7_2_20.png" alt="Set 2 Image with i_start=20">
+                <div class="caption">Set 2: Image with \( i_{\text{start}} = 20 \)</div>
+            </div>
+            <div class="image-group">
+                <img src="output5/part1.7_2_original.png" alt="Set 2 Original Image">
+                <div class="caption">Set 2: Original Test Image</div>
+            </div>
+        </div>
+
+        <h3>Part 1.7.1: Editing Hand-Drawn and Web Images</h3>
+
+        <p>
+            In this task, we project nonrealistic images (e.g., paintings, sketches, or scribbles) onto the natural image manifold using the diffusion model. 
+            This demonstrates how the model transforms abstract or synthetic input into a more realistic representation.
+        </p>
+        
+        <!-- Web Images Section -->
+        <p><strong>Web Images</strong></p>
+        <div class="row">
+            <div class="image-group">
+                <img src="output5/part1.7.1_web_1.png" alt="Web Image with i_start=1">
+                <div class="caption">Web Image with \( i_{\text{start}} = 1 \)</div>
+            </div>
+            <div class="image-group">
+                <img src="output5/part1.7.1_web_3.png" alt="Web Image with i_start=3">
+                <div class="caption">Web Image with \( i_{\text{start}} = 3 \)</div>
+            </div>
+            <div class="image-group">
+                <img src="output5/part1.7.1_web_5.png" alt="Web Image with i_start=5">
+                <div class="caption">Web Image with \( i_{\text{start}} = 5 \)</div>
+            </div>
+            <div class="image-group">
+                <img src="output5/part1.7.1_web_7.png" alt="Web Image with i_start=7">
+                <div class="caption">Web Image with \( i_{\text{start}} = 7 \)</div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="image-group">
+                <img src="output5/part1.7.1_web_10.png" alt="Web Image with i_start=10">
+                <div class="caption">Web Image with \( i_{\text{start}} = 10 \)</div>
+            </div>
+            <div class="image-group">
+                <img src="output5/part1.7.1_web_20.png" alt="Web Image with i_start=20">
+                <div class="caption">Web Image with \( i_{\text{start}} = 20 \)</div>
+            </div>
+            <div class="image-group">
+                <img src="output5/part1.7.1_web_original.png" alt="Original Web Image">
+                <div class="caption">Original Web Image</div>
+            </div>
+        </div>
+        
+        <!-- Paint 1: Flower Section -->
+        <p><strong>Paint 1: Flower</strong></p>
+        <div class="row">
+            <div class="image-group">
+                <img src="output5/part1.7.1_paint1_1.png" alt="Paint 1 with i_start=1">
+                <div class="caption">Paint 1 with \( i_{\text{start}} = 1 \)</div>
+            </div>
+            <div class="image-group">
+                <img src="output5/part1.7.1_paint1_3.png" alt="Paint 1 with i_start=3">
+                <div class="caption">Paint 1 with \( i_{\text{start}} = 3 \)</div>
+            </div>
+            <div class="image-group">
+                <img src="output5/part1.7.1_paint1_5.png" alt="Paint 1 with i_start=5">
+                <div class="caption">Paint 1 with \( i_{\text{start}} = 5 \)</div>
+            </div>
+            <div class="image-group">
+                <img src="output5/part1.7.1_paint1_7.png" alt="Paint 1 with i_start=7">
+                <div class="caption">Paint 1 with \( i_{\text{start}} = 7 \)</div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="image-group">
+                <img src="output5/part1.7.1_paint1_10.png" alt="Paint 1 with i_start=10">
+                <div class="caption">Paint 1 with \( i_{\text{start}} = 10 \)</div>
+            </div>
+            <div class="image-group">
+                <img src="output5/part1.7.1_paint1_20.png" alt="Paint 1 with i_start=20">
+                <div class="caption">Paint 1 with \( i_{\text{start}} = 20 \)</div>
+            </div>
+            <div class="image-group">
+                <img src="output5/part1.7.1_paint1_original.png" alt="Original Paint 1">
+                <div class="caption">Original Paint 1</div>
+            </div>
+        </div>
+        
+        <!-- Paint 2: Twitter Section -->
+        <p><strong>Paint 2: Twitter</strong></p>
+        <div class="row">
+            <div class="image-group">
+                <img src="output5/part1.7.1_paint2_1.png" alt="Paint 2 with i_start=1">
+                <div class="caption">Paint 2 with \( i_{\text{start}} = 1 \)</div>
+            </div>
+            <div class="image-group">
+                <img src="output5/part1.7.1_paint2_3.png" alt="Paint 2 with i_start=3">
+                <div class="caption">Paint 2 with \( i_{\text{start}} = 3 \)</div>
+            </div>
+            <div class="image-group">
+                <img src="output5/part1.7.1_paint2_5.png" alt="Paint 2 with i_start=5">
+                <div class="caption">Paint 2 with \( i_{\text{start}} = 5 \)</div>
+            </div>
+            <div class="image-group">
+                <img src="output5/part1.7.1_paint2_7.png" alt="Paint 2 with i_start=7">
+                <div class="caption">Paint 2 with \( i_{\text{start}} = 7 \)</div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="image-group">
+                <img src="output5/part1.7.1_paint2_10.png" alt="Paint 2 with i_start=10">
+                <div class="caption">Paint 2 with \( i_{\text{start}} = 10 \)</div>
+            </div>
+            <div class="image-group">
+                <img src="output5/part1.7.1_paint2_20.png" alt="Paint 2 with i_start=20">
+                <div class="caption">Paint 2 with \( i_{\text{start}} = 20 \)</div>
+            </div>
+            <div class="image-group">
+                <img src="output5/part1.7.1_paint2_original.png" alt="Original Paint 2">
+                <div class="caption">Original Paint 2</div>
+            </div>
+        </div>
+        
+        <h3>Part 1.7.2: Inpainting</h3>
+
+        <p>
+            Given an original image \( x_{\text{orig}} \) and a binary mask \( \mathbf{m} \), the model creates a new image that retains the original content where \( \mathbf{m} = 0 \), but generates new content where \( \mathbf{m} = 1 \).
+        </p>
+
+        <p>
+            Run the diffusion denoising loop, but at each step, after obtaining \( x_t \), we "force" \( x_t \) to match the original image \( x_{\text{orig}} \) wherever \( \mathbf{m} = 0 \). Mathematically, this is represented as:
+        </p>
+
+        <p style="text-align: center;">
+            \( x_t \leftarrow \mathbf{m} x_t + (1 - \mathbf{m}) \text{forward}(x_{\text{orig}}, t) \)
+        </p>
+
+        <p>
+            Essentially, everything inside the edit mask \( \mathbf{m} \) is updated by the diffusion process, while everything outside the mask remains consistent with the original image, with the correct amount of noise added for the current timestep \( t \).
+        </p>
+
+        <p>
+            Test Image: Campanile
+        </p>
+
+        <div class="row">
+            <div class="image-group">
+                <img src="output5/part1.7.2_test_image.png" alt="Original Image">
+                <div class="caption">Original Image</div>
+            </div>
+            <div class="image-group">
+                <img src="output5/part1.7.2_test_mask.png" alt="Edit Mask">
+                <div class="caption">Edit Mask</div>
+            </div>
+            <div class="image-group">
+                <img src="output5/part1.7.2_test_replace.png" alt="Noised Region to Replace">
+                <div class="caption">Noised Region to Replace</div>
+            </div>
+            <div class="image-group">
+                <img src="output5/part1.7.2_test.png" alt="Final Inpainting Result">
+                <div class="caption">Final Inpainting Result</div>
+            </div>
+        </div>
+
+        <p>
+            My Choise: Bird
+        </p>
+        <div class="row">
+            <div class="image-group">
+                <img src="output5/part1.7.2_1_image.png" alt="Original Image">
+                <div class="caption">Original Image</div>
+            </div>
+            <div class="image-group">
+                <img src="output5/part1.7.2_1_mask.png" alt="Edit Mask">
+                <div class="caption">Edit Mask</div>
+            </div>
+            <div class="image-group">
+                <img src="output5/part1.7.2_1_replace.png" alt="Noised Region to Replace">
+                <div class="caption">Noised Region to Replace</div>
+            </div>
+            <div class="image-group">
+                <img src="output5/part1.7.2_1.png" alt="Final Inpainting Result">
+                <div class="caption">Final Inpainting Result</div>
+            </div>
+        </div>
+
+        <p>
+            My Choise: Beach
+        </p>
+        <div class="row">
+            <div class="image-group">
+                <img src="output5/part1.7.2_2_image.png" alt="Original Image">
+                <div class="caption">Original Image</div>
+            </div>
+            <div class="image-group">
+                <img src="output5/part1.7.2_2_mask.png" alt="Edit Mask">
+                <div class="caption">Edit Mask</div>
+            </div>
+            <div class="image-group">
+                <img src="output5/part1.7.2_2_replace.png" alt="Noised Region to Replace">
+                <div class="caption">Noised Region to Replace</div>
+            </div>
+            <div class="image-group">
+                <img src="output5/part1.7.2_2.png" alt="Final Inpainting Result">
+                <div class="caption">Final Inpainting Result</div>
+            </div>
+        </div>
+        
+        
+        <h3>Part 1.7.3: Text-Conditional Image-to-Image Translation</h3>
+
+        <p>
+            In this section, we extend image-to-image translation by incorporating a text prompt to control the generated content. The text prompt guides the translation process, allowing for more specific and targeted modifications.
+        </p>
+
+        <p>
+            Test Image: Campanile<br>
+            Text Prompt: "a rocket ship"
+        </p>
+
+        <div class="row">
+            <div class="image-group">
+                <img src="output5/part1.7.3_test_1.png" alt="Test Image at t=1">
+                <div class="caption">Test Image at \( t=1 \)</div>
+            </div>
+            <div class="image-group">
+                <img src="output5/part1.7.3_test_3.png" alt="Test Image at t=3">
+                <div class="caption">Test Image at \( t=3 \)</div>
+            </div>
+            <div class="image-group">
+                <img src="output5/part1.7.3_test_5.png" alt="Test Image at t=5">
+                <div class="caption">Test Image at \( t=5 \)</div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="image-group">
+                <img src="output5/part1.7.3_test_7.png" alt="Test Image at t=7">
+                <div class="caption">Test Image at \( t=7 \)</div>
+            </div>
+            <div class="image-group">
+                <img src="output5/part1.7.3_test_10.png" alt="Test Image at t=10">
+                <div class="caption">Test Image at \( t=10 \)</div>
+            </div>
+            <div class="image-group">
+                <img src="output5/part1.7.3_test_20.png" alt="Test Image at t=20">
+                <div class="caption">Test Image at \( t=20 \)</div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="image-group">
+                <img src="output5/part1.7.3_test_original.png" alt="Original Test Image">
+                <div class="caption">Original Test Image</div>
+            </div>
+            <div class="image-group">
+                <img src="output5/part1.7.3_test_mask.png" alt="Edit Mask">
+                <div class="caption">Edit Mask</div>
+            </div>
+            <div class="image-group">
+                <img src="output5/part1.7.3_test_replace.png" alt="Replaced Content">
+                <div class="caption">Replaced Content</div>
+            </div>
+        </div>
+
+        <p>
+            Test Image: Beach<br>
+            Text Prompt: "a man wearing a hat"
+        </p>
+
+        <div class="row">
+            <div class="image-group">
+                <img src="output5/part1.7.3_1_1.png" alt="Test Image 1 at t=1">
+                <div class="caption">Choice Image 1 at \( t=1 \)</div>
+            </div>
+            <div class="image-group">
+                <img src="output5/part1.7.3_1_3.png" alt="Test Image 1 at t=3">
+                <div class="caption">Choice Image 1 at \( t=3 \)</div>
+            </div>
+            <div class="image-group">
+                <img src="output5/part1.7.3_1_5.png" alt="Test Image 1 at t=5">
+                <div class="caption">Choice Image 1 at \( t=5 \)</div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="image-group">
+                <img src="output5/part1.7.3_1_7.png" alt="Test Image 1 at t=7">
+                <div class="caption">Choice Image 1 at \( t=7 \)</div>
+            </div>
+            <div class="image-group">
+                <img src="output5/part1.7.3_1_10.png" alt="Test Image 1 at t=10">
+                <div class="caption">Choice Image 1 at \( t=10 \)</div>
+            </div>
+            <div class="image-group">
+                <img src="output5/part1.7.3_1_20.png" alt="Test Image 1 at t=20">
+                <div class="caption">Choice Image 1 at \( t=20 \)</div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="image-group">
+                <img src="output5/part1.7.3_1_original.png" alt="Original Test Image 1">
+                <div class="caption">Original Choice Image 1</div>
+            </div>
+            <div class="image-group">
+                <img src="output5/part1.7.3_1_mask.png" alt="Edit Mask for Test Image 1">
+                <div class="caption">Edit Mask</div>
+            </div>
+            <div class="image-group">
+                <img src="output5/part1.7.3_1_replace.png" alt="Replaced Content for Test Image 1">
+                <div class="caption">Replaced Content</div>
+            </div>
+        </div>
+
+        <p>
+            Test Image: Man<br>
+            Text Prompt: "a rocket ship"
+        </p>
+
+        <div class="row">
+            <div class="image-group">
+                <img src="output5/part1.7.3_2_1.png" alt="Test Image 2 at t=1">
+                <div class="caption">Choice Image 2 at \( t=1 \)</div>
+            </div>
+            <div class="image-group">
+                <img src="output5/part1.7.3_2_3.png" alt="Test Image 2 at t=3">
+                <div class="caption">Choice Image 2 at \( t=3 \)</div>
+            </div>
+            <div class="image-group">
+                <img src="output5/part1.7.3_2_5.png" alt="Test Image 2 at t=5">
+                <div class="caption">Choice Image 2 at \( t=5 \)</div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="image-group">
+                <img src="output5/part1.7.3_2_7.png" alt="Test Image 2 at t=7">
+                <div class="caption">Choice Image 2 at \( t=7 \)</div>
+            </div>
+            <div class="image-group">
+                <img src="output5/part1.7.3_2_10.png" alt="Test Image 2 at t=10">
+                <div class="caption">Choice Image 2 at \( t=10 \)</div>
+            </div>
+            <div class="image-group">
+                <img src="output5/part1.7.3_2_20.png" alt="Test Image 2 at t=20">
+                <div class="caption">Choice Image 2 at \( t=20 \)</div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="image-group">
+                <img src="output5/part1.7.3_2_original.png" alt="Original Test Image 2">
+                <div class="caption">Original Choice Image 2</div>
+            </div>
+            <div class="image-group">
+                <img src="output5/part1.7.3_2_mask.png" alt="Edit Mask for Test Image 2">
+                <div class="caption">Edit Mask</div>
+            </div>
+            <div class="image-group">
+                <img src="output5/part1.7.3_2_replace.png" alt="Replaced Content for Test Image 2">
+                <div class="caption">Replaced Content</div>
+            </div>
+        </div>
+        
+        <h3>1.8 Visual Anagrams</h3>
+        <p>
+            In this section, we create optical illusions with diffusion models by using a clever combination of transformations and denoising steps. 
+        </p>
+        <p style="text-align: center;">
+            \[
+            \epsilon_1 = \text{UNet}(x_t, t, p_1) \\
+            \epsilon_2 = \text{flip}(\text{UNet}(\text{flip}(x_t), t, p_2)) \\
+            \epsilon = (\epsilon_1 + \epsilon_2) / 2
+            \]
+        </p>
+
+        <p>
+            First denoise an image \( x_t \) at step \( t \) normally with prompt 1 to obtain noise estimate \( \epsilon_1 \). <br>
+            Then flip \( x_t \) upside down, and denoise with prompt 2 to get noise estimate \( \epsilon_2 \). <br>
+            We can flip \( \epsilon_2 \) back, to make it right-side up, and average the two noise estimates. <br>
+            We can then perform a reverse/denoising diffusion step with the averaged noise estimate. <br>
+        </p>
+
+        <div class="row">
+            <div class="image-group">
+                <img src="output5/part1.8_1_1.png" alt="Visual Anagram 1 - Image 1">
+                <div class="caption">"an oil painting of people around a campfire""</div>
+            </div>
+            <div class="image-group">
+                <img src="output5/part1.8_1_2.png" alt="Visual Anagram 1 - Image 2">
+                <div class="caption">"an oil painting of an old man"</div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="image-group">
+                <img src="output5/part1.8_2_2.png" alt="Visual Anagram 2 - Image 2">
+                <div class="caption">"a photo of the amalfi cost"</div>
+            </div>
+            <div class="image-group">
+                <img src="output5/part1.8_2_1.png" alt="Visual Anagram 2 - Image 1">
+                <div class="caption">"a photo of a man"</div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="image-group">
+                <img src="output5/part1.8_3_2.png" alt="Visual Anagram 3 - Image 2">
+                <div class="caption">"an oil painting of a snowy mountain village"</div>
+            </div>
+            <div class="image-group">
+                <img src="output5/part1.8_3_1.png" alt="Visual Anagram 3 - Image 1">
+                <div class="caption">"a man wearing a hat"</div>
+            </div>
+        </div>
+        
+        <h3>1.9 Hybrid Images</h3>
+        <p>
+            In order to create hybrid images with a diffusion model, create a composite noise estimate \( \epsilon \), by estimating the noise with two different text prompts, and then combining low frequencies from one noise estimate with high frequencies of the other.
+        </p>
+        <p style="text-align: center;">
+            \( \epsilon_1 = \text{UNet}(x_t, t, p_1) \) <br>
+            \( \epsilon_2 = \text{UNet}(x_t, t, p_2) \) <br>
+            \( \epsilon = f_{\text{lowpass}}(\epsilon_1) + f_{\text{highpass}}(\epsilon_2) \)
+        </p>
+        <p>
+            UNet is the diffusion model UNet, \( f_{\text{lowpass}} \) is a low-pass function, \( f_{\text{highpass}} \) is a high-pass function, and \( p_1 \), \( p_2 \) are two different text prompt embeddings. Our final noise estimate is \( \epsilon \). <br>
+        </p>
+
+        <div class="row">
+            <div class="image-group">
+                <img src="output5/part1.10_1.png" alt="Hybrid Image 1">
+                <div class="caption">Hybrid Image 1</div>
+            </div>
+            <div class="image-group">
+                <img src="output5/part1.10_2.png" alt="Hybrid Image 2">
+                <div class="caption">Hybrid Image 2</div>
+            </div>
+            <div class="image-group">
+                <img src="output5/part1.10_3.png" alt="Hybrid Image 3">
+                <div class="caption">Hybrid Image 3</div>
+            </div>
+        </div>
+
+        <p>
+            Gaussian blur of kernel size 33 and sigma 2.
+        </p>
+
+        <p>
+            Hybrid Image 1: like a skull from far away but a waterfall from close up. <br>
+            Hybrid Image 2: like a old man from far away but people around a campfire from close up. <br>
+            Hybrid Image 3: like a dog from far away but waterfall from close up.
+        </p>
+
+        <!-- Part B Title -->
+        <h2>Part B: Diffusion Models from Scratch!</h2>
+        <h3>Part 1: Training a Single-Step Denoising UNet</h3>
+
+        <h4>UNet and Operations</h3>
+        <p>
+            Build a simple one-step denoiser. <br>
+            Given a noisy image \( z \), we aim to train a denoiser 
+            \( D_\theta \) such that it maps \( z \) to a clean image \( x \). To do so, we can optimize over an 
+            \( L_2 \) loss:
+        </p>
+        <p style="text-align: center;">
+            \( L = \mathbb{E}_{z,x} \| D_\theta(z) - x \|^2 \)
+        </p>
+
+        <div class="large-group">
+            <img src="output5/partB1.1_Unconditional_UNet_Structure.png" alt="Unconditional U-Net Structure">
+            <div class="caption">Unconditional U-Net Structure</div>
+        </div>
+
+        <div class="large-group">
+            <img src="output5/partB1.1_Standard_UNet_Operations.png" alt="Standard U-Net Operations">
+            <div class="caption">Standard U-Net Operations</div>
+        </div>
+
+        <h4>Training Data Pairs</h4>
+        <p>
+            To train our denoiser, we need to generate training data pairs of \((z, x)\), where each \(x\) is a clean MNIST digit. 
+            For each training batch, we can generate \(z\) from \(x\) using the following noising process:
+        </p>
+        <p style="text-align: center;">
+            \( z = x + \sigma \epsilon, \quad \epsilon \sim \mathcal{N}(0, \mathbf{I}) \).
+        </p>
+        <p>
+            Here is what I used for the training data pairs:
+        </p>
+        <div class="large-group">
+            <img src="output5/partB1.2.png" alt="MNIST Noise Levels">
+            <div class="caption">Varying levels of noise on MNIST digits</div>
+        </div>
+
+        <h4>Training</h4>
+
+        <ul>
+            <li><strong>Objective</strong>: Train a denoiser to remove noise \( \sigma = 0.5 \) from clean MNIST images \( x \).</li>
+            <li><strong>Dataset</strong>: Use <code>torchvision.datasets.MNIST</code> for training and testing. Train on the training set only, shuffling before creating the dataloader. Batch size: \( 256 \). Train for \( 5 \) epochs.
+            <li><strong>Model</strong>: Use the UNet architecture with hidden dimension \( D = 128 \).</li>
+            <li><strong>Optimizer</strong>: Adam with learning rate \( 1 \times 10^{-4} \).</li>
+        </ul>
+
+        <div class="large-group">
+            <img src="output5/partB1.2.1_loss.png" alt="">
+            <div class="caption"></div>
+        </div>
+
+        <div class="large-group">
+            <img src="output5/partB1.2.1_loss_log.png" alt="">
+            <div class="caption"></div>
+        </div>
+        
+        <h4>Training Result</h4>
+
+        <p>
+            1 Epoch
+        </p>
+
+        <div class="large-group">
+            <img src="output5/partB1.2.1_epoch1.png" alt="">
+            <div class="caption">Results on digits from the test set after 1 epoch of training</div>
+        </div>
+
+        <p>
+            5 Epoch
+        </p>
+
+        <div class="large-group">
+            <img src="output5/partB1.2.1_epoch5.png" alt="">
+            <div class="caption">Results on digits from the test set after 5 epoch of training</div>
+        </div>
+
+        <h4>Out-of-Distribution Testing</h4>
+        <div class="large-group">
+            <img src="output5/partB1.2.2.png" alt="">
+            <div class="caption">Results on digits from the test set with varying noise levels.</div>
+        </div>
+
+        <h3>Part 2: Training a Diffusion Model</h3>
+        <p>
+        The forward process for generating noisy images is defined as:
+        </p>
+        <p style="text-align: center;">
+        \( x_t = \sqrt{\bar{\alpha}_t} x_0 + \sqrt{1 - \bar{\alpha}_t} \epsilon \), where \( \epsilon \sim \mathcal{N}(0, 1) \).
+        </p>
+        <p>
+        The training objective for denoising is to minimize the L2 loss:
+        </p>
+        <p style="text-align: center;">
+        \( L = \mathbb{E}_{\epsilon, x_0, t} \| \epsilon_\theta(x_t, t) - \epsilon \|^2 \).
+        </p>
+
+        <h4>Time Conditioned UNet and FCBlock</h4>
+        <div class="large-group">
+            <img src="output5/partB2.1_Conditioned_UNet_Structure.png" alt="">
+            <div class="caption">Conditioned UNet</div>
+        </div>
+
+        <div class="large-group">
+            <img src="output5/partB2.1_fcblock.png" alt="">
+            <div class="caption">FCBlock for conditioning</div>
+        </div>
+
+        <h4>Training UNet</h4>
+        <div class="large-group">
+            <img src="output5/partB2.2_time_conditioned_unet_algo.png" alt="">
+            <div class="caption">Training time-conditioned UNet</div>
+        </div>
+        <ul>
+            <li><strong>Objective:</strong> Train a time-conditioned UNet \( \epsilon_\theta(x_t, t) \) to predict noise in \( x_t \), given a noisy image \( x_t \) and timestep \( t \).</li>
+            <li><strong>Dataset and Dataloader:</strong> Use the MNIST dataset via <code>torchvision.datasets.MNIST</code> for training and testing. Train only on the training set, shuffling the data before loading. Use a batch size of 128, and train for 20 epochs. Noise the image batches during dataloader fetch to improve generalization.</li>
+            <li><strong>Model:</strong> Implement a time-conditioned UNet with a hidden dimension \( D = 64 \), as shown in algorithm B.1. Normalize \( t \) before embedding.</li>
+            <li><strong>Optimizer:</strong> Use Adam with an initial learning rate of \( 10^{-3} \), applying exponential learning rate decay with a gamma of \( 0.1^{(1.0 / \text{num\_epochs})} \). Update the scheduler using <code>scheduler.step()</code> after each epoch.</li>
+        </ul>
+
+        <div class="large-group">
+            <img src="output5/partB2.1_loss.png" alt="">
+            <div class="caption"></div>
+        </div>
+
+        <div class="large-group">
+            <img src="output5/partB2.1_loss_log.png" alt="">
+            <div class="caption"></div>
+        </div>
+
+        <h4>Sampling from UNet</h4>
+
+        <div class="large-group">
+            <img src="output5/partB2.3_sampling_structure.png" alt="">
+            <div class="caption">Sampling from time-conditioned UNet</div>
+        </div>
+
+        <div class="row">
+            <div class="large-group2">
+                <img src="output5/partB2.1_5.png" alt="">
+                <div class="caption">Sampling results for the time-conditioned UNet for 5 Epochs</div>
+            </div>
+
+            <div class="large-group2">
+                <img src="output5/partB2.1_20.png" alt="">
+                <div class="caption">Sampling results for the time-conditioned UNet for 20 Epochs</div>
+            </div>
+        </div>  
+
+        <h4>Class-Conditioning UNet</h4>
+
+        <div class="large-group">
+            <img src="output5/partB2.4_structure.png" alt="">
+            <div class="caption">Training class-conditioned UNet</div>
+        </div>
+
+        <div class="large-group">
+            <img src="output5/partB2.2_loss.png" alt="">
+            <div class="caption"></div>
+        </div>
+
+        <div class="large-group">
+            <img src="output5/partB2.2_loss_log.png" alt="">
+            <div class="caption"></div>
+        </div>
+
+        <h4>Sampling from Class-Conditioned UNet</h4>
+
+        <div class="large-group">
+            <img src="output5/partB2.5_structure.png" alt="">
+            <div class="caption">Sampling from class-conditioned UNet</div>
+        </div>
+
+        <div class="row">
+            <div class="large-group2">
+                <img src="output5/partB2.2_5.png" alt="">
+                <div class="caption">Sampling results for the class-conditioned UNet for 5 Epochs</div>
+            </div>
+
+            <div class="large-group2">
+                <img src="output5/partB2.2_20.png" alt="">
+                <div class="caption">Sampling results for the class-conditioned UNet for 20 Epochs</div>
+            </div>
+        </div>  
+
+        <h2>What I Learned</h2>
+        <p>
+            I have used diffusion models many times but never had the chance to implement one from scratch. This was a very valuable experience for me. A big shout-out to all the staff who developed this project—it's an awesome project, and I enjoyed it so much!
+        </p>
+    </div>
+
+</body>
+</html>
