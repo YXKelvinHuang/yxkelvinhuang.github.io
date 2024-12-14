@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Final Projects</title>
+    <script type="text/javascript" async
+    src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 75%;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            font-size: 2.5em;
+        }
+        h2 {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+        h3 {
+            font-size: 1.3em;
+            margin-bottom: 5px;
+        }
+        p {
+            font-size: 1em;
+            margin-bottom: 20px;
+        }
+        .row {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+        }
+        .image-group {
+            text-align: center;
+        }
+        .image-group img {
+            width: 250px;
+            height: auto;
+            object-fit: cover;
+        }
+        .large-group {
+            text-align: center;
+        }
+        .large-group img {
+            width: 130%;
+            height: auto;
+            max-width: 1100px;
+        }
+        .large-group2 img {
+            width: 95%;
+            height: auto;
+            max-width: 800px;
+        }
+        .caption {
+            font-style: italic;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Final Projects</h1>
+        <p><strong>Student Name: Kelvin Huang</strong></p>
+
+        <!-- Final Project 1 -->
+        <h2>Final Project 1: Light Field Camera</h2>
+        <p>
+            The Light Field Camera project explores how to capture and manipulate the entire light field of a scene. 
+            This includes information about the intensity and direction of light rays, enabling advanced functionalities 
+            such as refocusing and perspective shifts.
+        </p>
+
+        <h3>Part 1: Depth Refocusing</h3>
+        <p>
+            The objects which are far away from the camera do not vary their position significantly when the camera moves around while keeping the optical axis direction unchanged. 
+            Nearby objects, on the other hand, vary their position significantly across images. Averaging all the images in the grid without any shifting will produce an image 
+            sharp around far-away objects but blurry around nearby ones. Similarly, shifting the images 'appropriately' and then averaging allows one to focus on objects at 
+            different depths.
+        </p>
+        <p>
+            To refocus at different depths, the relative positions of each image in the grid are used to calculate the required shifts for alignment. By applying these shifts 
+            and averaging the grid images, we simulate focusing on objects at various depths. A range of depth parameters (\( \alpha \)) is used to generate images focusing 
+            from the background to the foreground.
+        </p>
+
+        <h4>Key Results</h4>
+        <div class="row">
+            <div class="image-group">
+                <img src="output6/refocus_near.png" alt="Refocus Near">
+                <div class="caption">Refocused on far objects (\( \alpha = -0.05 \))</div>
+            </div>
+            <div class="image-group">
+                <img src="output6/refocus_middle.png" alt="Refocus Far">
+                <div class="caption">Refocused on middle objects (\( \alpha = 0.20 \))</div>
+            </div>
+            <div class="image-group">
+                <img src="output6/refocus_far.png" alt="Refocus Far">
+                <div class="caption">Refocused on near objects (\( \alpha = 0.45 \))</div>
+            </div>
+        </div>
+
+        <h4>GIF of Refocusing</h4>
+        <p>
+            Below is a GIF showing the continuous depth refocusing effect as \( \alpha \) changes:
+        </p>
+        <div class="large-group">
+            <img src="output6/depth_refocusing.gif" alt="Depth Refocusing GIF">
+            <div class="caption">Depth Refocusing Animation</div>
+        </div>
+
+        <h3>Part 2: Aperture Adjustment</h3>
+        <p>
+            Aperture adjustment allows us to simulate the effects of changing the size of the camera's aperture. A larger aperture includes more viewpoints, leading to more pronounced depth-of-field effects and blur in out-of-focus regions. Conversely, a smaller aperture reduces the number of viewpoints, creating sharper images across all depths.
+        </p>
+        <p>
+            In this part of the project, we implemented aperture adjustment by selecting a circular region of viewpoints around a central image, based on the desired aperture size (radius). The selected viewpoints were averaged to generate images simulating different aperture settings.
+        </p>
+
+        <h4>Approach</h4>
+        <p>
+            The method involves the following steps:
+        </p>
+        <ul>
+            <li>
+                Select viewpoints within a circular aperture defined by a radius around the central image. The distance of each viewpoint from the center determines its inclusion in the aperture.
+            </li>
+            <li>
+                Average the selected viewpoints. Larger apertures, with more viewpoints, increase the depth-of-field blur, while smaller apertures retain sharper focus across the scene.
+            </li>
+            <li>
+                Generate and save images for various aperture radii to visualize the effect of aperture adjustment.
+            </li>
+        </ul>
+
+        <h4>Key Results</h4>
+        <p>
+            The following images illustrate the effects of aperture adjustment for different radii. A smaller aperture radius results in a sharper image, while a larger radius creates a more pronounced depth-of-field effect with blurred out-of-focus regions.
+        </p>
+
+        <div class="row">
+            <div class="image-group">
+                <img src="output6/aperture_small.png" alt="Small Aperture">
+                <div class="caption">Small Aperture (\( \text{radius} = 0.5 \))</div>
+            </div>
+            <div class="image-group">
+                <img src="output6/aperture_medium.png" alt="Medium Aperture">
+                <div class="caption">Medium Aperture (\( \text{radius} = 3 \))</div>
+            </div>
+            <div class="image-group">
+                <img src="output6/aperture_large.png" alt="Large Aperture">
+                <div class="caption">Large Aperture (\( \text{radius} = 8 \))</div>
+            </div>
+        </div>
+
+        <h4>GIF of Aperture Adjustment</h4>
+        <p>
+            Below is a GIF showing the gradual change in the depth-of-field effect as the aperture radius decreases:
+        </p>
+        <div class="large-group">
+            <img src="output6/aperture_adjustment.gif" alt="Aperture Adjustment GIF">
+            <div class="caption">Aperture Adjustment Animation</div>
+        </div>
+
+        <!-- Bells & Whistles -->
+        <h3>Bells & Whistles: Using Real Data</h3>
+        <p>
+            Using Real Data: I collected my own data by clicking multiple images with my iPhone and implemented refocusing. 
+            I took 9 images in a 3×3 grid, from (0,0) to (2,2).
+        </p>
+        <p>
+            Below are 3 images captured at different positions in the grid: (0,0), (0,1), and (0,2). 
+            Their file names are out_00_00.png, out_00_01.png, and out_00_02.png under the folder <strong>output6</strong>.
+        </p>
+        <div class="row">
+            <div class="image-group">
+                <img src="output6/out_00_00.png" alt="Image (0,0)">
+                <div class="caption">(0,0)</div>
+            </div>
+            <div class="image-group">
+                <img src="output6/out_00_01.png" alt="Image (0,1)">
+                <div class="caption">(0,1)</div>
+            </div>
+            <div class="image-group">
+                <img src="output6/out_00_02.png" alt="Image (0,2)">
+                <div class="caption">(0,2)</div>
+            </div>
+        </div>
+        <p>Here is what I get:</p>
+        <div class="large-group2">
+            <img src="output6/own_depth_refocusing.gif" alt="Own Depth Refocusing GIF">
+            <div class="caption">Depth Refocusing using my own data</div>
+        </div>
+
+        <p>
+            Reflection: The reason why my photos do not work well is because they were shot by hand, which caused inconsistent camera movement and misalignment between shots. Additionally, I captured only a 3x3 grid with 9 photos, which is insufficient to produce smooth depth refocusing or simulate varying apertures effectively. Finally, I did not record the precise relative positions of the camera for each shot, so the lack of offsets makes it impossible to calculate accurate shifts for proper alignment and depth computations. These limitations combined significantly reduced the quality of the results.
+        </p>
+
+
+        <!-- Final Project 2 -->
+        <h2>Final Project 2: Image Quilting</h2>
+        <p>
+            The goal of this assignment is to implement the image quilting algorithm for texture synthesis and transfer, described in this SIGGRAPH 2001 paper by Efros and Freeman. Texture synthesis is the creation of a larger texture image from a small sample. Texture transfer is giving an object the appearance of having the same texture as a sample while preserving its basic shape.
+        </p>
+        <h3>Part 1: Randomly Sampled Texture</h3>
+        <p>
+            Randomly samples square patches from a sample in order to create an output image. Simple but not very effective.
+        </p>
+        <div class="row">
+            <div class="image-group">
+                <img src="output6/sample_image.png" alt="Sample Image">
+                <div class="caption">Sample Image of Bricks</div>
+            </div>
+            <div class="image-group">
+                <img src="output6/random_quilt.png" alt="Random Quilt">
+                <div class="caption">Random Quilt of Bricks</div>
+            </div>
+        </div>
+
+        <h3>Part 2: Overlapping Patches</h3>
+        <p>
+            The 'quilt_simple' function generates a textured output image by sampling random patches from an input texture and stitching them with overlapping regions. Starting with a random patch for the upper-left corner, subsequent patches overlap horizontally, vertically, or both. Overlapping costs are computed using 'ssd_patch', which calculates the Sum of Squared Differences (SSD) efficiently with a mask. Patches are selected using 'choose_sample', which randomly picks a low-cost patch among the 'tol' smallest costs. Selected patches are copied into the output image, ensuring correct alignment and overlap.
+        </p>
+        <div class="row">
+            <div class="image-group">
+                <img src="output6/sample_image.png" alt="Sample Image">
+                <div class="caption">Sample Image of Bricks</div>
+            </div>
+            <div class="image-group">
+                <img src="output6/simple_overlapping_quilt.png" alt="Overlapping Patches">
+                <div class="caption">Overlapping Quilt of Bricks</div>
+            </div>
+        </div>
+
+        <h3>Part 3: Seam Finding</h3>
+        <p>
+            Enhance the quilt_simple function with seam finding to minimize edge artifacts by integrating a quilt_cut function. Use the cut function from utils.py to calculate the minimum-cost seam for overlapping regions based on square differences (summed over RGB channels) between the output image and sampled patch. For patches with both top and left overlaps, compute two seams and combine masks using np.logical_and(mask1, mask2). Vertical seams can be computed using cut(bndcost.T).
+        </p>
+        <div class="row">
+            <div class="image-group">
+                <img src="output6/sample_image.png" alt="Sample Image">
+                <div class="caption">Sample Image of Bricks</div>
+            </div>
+            <div class="image-group">
+                <img src="output6/quilt_with_seam_finding.png" alt="Seam Finding">
+                <div class="caption">Seam Finding Quilt of Bricks</div>
+            </div>
+        </div>
+
+        <p>
+            Compare the three results.
+        </p>
+        <div class="row">
+            <div class="image-group">
+                <img src="output6/random_quilt.png" alt="Random Quilt">
+                <div class="caption">Random Quilt of Bricks</div>
+            </div>
+            <div class="image-group">
+                <img src="output6/simple_overlapping_quilt.png" alt="Overlapping Patches">
+                <div class="caption">Overlapping Quilt of Bricks</div>
+            </div>
+            <div class="image-group">
+                <img src="output6/quilt_with_seam_finding.png" alt="Seam Finding">
+                <div class="caption">Seam Finding Quilt of Bricks</div>
+            </div>
+        </div>
+        
+
+        <h3>Part 4: Texture Transfer</h3>
+        <p>
+            Create a function texture_transfer based on my quilt_cut function for creating a texture sample that is guided by a pair of sample/target correspondence images. Note: this part is non-iterative version of texture transfer.
+        </p>
+
+        <div class="row">
+            <div class="image-group">
+                <img src="output6/sketch.jpg" alt="Random Quilt">
+                <div class="caption">Sketch Texture</div>
+            </div>
+            <div class="image-group">
+                <img src="output6/feynman.jpg" alt="Overlapping Patches">
+                <div class="caption">Human Shape</div>
+            </div>
+            <div class="image-group">
+                <img src="output6/result_non_iterative.png" alt="Seam Finding">
+                <div class="caption">Texture Transfer - Non-iterative</div>
+            </div>
+        </div>
+
+        <!-- Bells & Whistles -->
+        <h3>Bells & Whistles: Iterative Texture Transfer</h3>
+        <p>
+            The texture_transfer_iterative function performs texture transfer iteratively over multiple scales. In each iteration, it reduces the patch size for finer detail, computes overlap, guidance, and prior iteration costs to select low-cost patches, and applies seam cutting to blend patches seamlessly. Each iteration refines the output based on the results of the previous one, progressively aligning the texture to the guidance image while improving coherence and detail.
+        </p>
+
+        <div class="row">
+            <div class="image-group">
+                <img src="output6/result_iterative.png" alt="Overlapping Patches">
+                <div class="caption">Texture Transfer - Iterative</div>
+            </div>
+            <div class="image-group">
+                <img src="output6/result_non_iterative.png" alt="Seam Finding">
+                <div class="caption">Texture Transfer - Non-iterative</div>
+            </div>
+        </div>
+
+        <h2>Conclusion</h2>
+        <p>
+            In the Light Field Camera project, I learned how to work with light field data to create cool effects like depth refocusing and aperture adjustments. It was fascinating to see how shifting and averaging images could change the focus, and working with real data taught me the importance of precise alignment and how small mistakes can impact results.
+        </br>
+    </br>
+In the Image Quilting project, I got hands-on experience with texture synthesis and transfer. Starting with simple random sampling, I progressed to seam finding and iterative methods, learning how to handle overlaps and create smooth textures. It was exciting to see how textures could be guided by an image while maintaining their natural look.
+</br>
+</br>
+This course, CS180, has been such a rewarding experience. It challenged me to think creatively and apply concepts in real-world ways. I’ve learned so much about computational imaging and had fun experimenting along the way. Huge thanks to the instructors and TAs for making this such an awesome class!
+        </p>
+    </div>
+
+</body>
+</html>
