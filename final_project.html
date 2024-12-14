@@ -295,7 +295,7 @@
         </div>
 
         <!-- Bells & Whistles -->
-        <h3>Bells & Whistles: Iterative Texture Transfer</h3>
+        <h3>Bells & Whistles 1: Iterative Texture Transfer</h3>
         <p>
             The texture_transfer_iterative function performs texture transfer iteratively over multiple scales. In each iteration, it reduces the patch size for finer detail, computes overlap, guidance, and prior iteration costs to select low-cost patches, and applies seam cutting to blend patches seamlessly. Each iteration refines the output based on the results of the previous one, progressively aligning the texture to the guidance image while improving coherence and detail.
         </p>
@@ -308,6 +308,22 @@
             <div class="image-group">
                 <img src="output6/result_non_iterative.png" alt="Seam Finding">
                 <div class="caption">Texture Transfer - Non-iterative</div>
+            </div>
+        </div>
+
+        <h3>Bells & Whistles 2: Fill holes</h3>
+        <p>
+            Fill holes of arbitrary shape for image completion. Patches are drawn from other parts of the target image. 
+        </p>
+
+        <div class="row">
+            <div class="image-group">
+                <img src="output6/bricks_with_white_hole.jpg" alt="Overlapping Patches">
+                <div class="caption">Bricks with a White Hole</div>
+            </div>
+            <div class="image-group">
+                <img src="output6/inpainted_result_final.jpg" alt="Seam Finding">
+                <div class="caption">Inpaint Result</div>
             </div>
         </div>
 
