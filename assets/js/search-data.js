@@ -16,13 +16,6 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/publications/";
           },
-        },{id: "nav-cv",
-          title: "cv",
-          description: "This is a description of the page. You can modify it in &#39;_pages/cv.md&#39;. You can also change or remove the top pdf download button.",
-          section: "Navigation",
-          handler: () => {
-            window.location.href = "/cv/";
-          },
         },{id: "post-a-post-with-plotly-js",
         
           title: "a post with plotly.js",
@@ -391,16 +384,17 @@ ninja.data = [{
           description: "",
           section: "Books",handler: () => {
               window.location.href = "/books/the_godfather/";
-            },},{id: "news-a-simple-inline-announcement",
-          title: 'A simple inline announcement.',
+            },},{id: "news-honored-to-be-selected-for-the-summer-research-programme-srp-at-hku-advised-by-prof-xihui-liu",
+          title: 'Honored to be selected for the Summer Research Programme (SRP) at HKU, advised...',
           description: "",
-          section: "News",},{id: "news-a-long-announcement-with-details",
-          title: 'A long announcement with details',
+          section: "News",},{id: "news-excited-to-kick-off-my-research-journey-at-blender-lab-uiuc-i-will-be-working-on-vlm-robustness-advised-by-prof-qingyun-wang",
+          title: 'Excited to kick off my research journey at Blender Lab (UIUC)! I will...',
           description: "",
-          section: "News",handler: () => {
-              window.location.href = "/news/announcement_2/";
-            },},{id: "news-a-simple-inline-announcement-with-markdown-emoji-sparkles-smile",
-          title: 'A simple inline announcement with Markdown emoji! :sparkles: :smile:',
+          section: "News",},{id: "news-excited-to-start-as-a-researcher-advised-by-prof-dawn-song-to-work-on-trustworthy-agentic-ai",
+          title: 'Excited to start as a researcher advised by Prof. Dawn Song to work...',
+          description: "",
+          section: "News",},{id: "news-thrilled-to-share-that-our-paper-on-vlm-adversarial-robustness-has-been-accepted-to-the-aaai-2026-aigov-workshop",
+          title: 'Thrilled to share that our paper on VLM adversarial robustness has been accepted...',
           description: "",
           section: "News",},{id: "projects-project-1",
           title: 'project 1',
@@ -467,20 +461,6 @@ ninja.data = [{
         section: 'Socials',
         handler: () => {
           window.open("https://www.linkedin.com/in/kelvin-yuxiang-huang", "_blank");
-        },
-      },{
-        id: 'social-rss',
-        title: 'RSS Feed',
-        section: 'Socials',
-        handler: () => {
-          window.open("/feed.xml", "_blank");
-        },
-      },{
-        id: 'social-scholar',
-        title: 'Google Scholar',
-        section: 'Socials',
-        handler: () => {
-          window.open("https://scholar.google.com/citations?user=qc6CJjYAAAAJ", "_blank");
         },
       },{
       id: 'light-theme',
