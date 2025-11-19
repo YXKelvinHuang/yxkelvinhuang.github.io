@@ -446,7 +446,7 @@ ninja.data = [{
         title: 'CV',
         section: 'Socials',
         handler: () => {
-          window.open("/assets/pdf/Kelvin_Huang_CV_Nov18_2025.pdf", "_blank");
+          window.open("/assets/pdf/Kelvin_CV.pdf", "_blank");
         },
       },{
         id: 'social-email',
