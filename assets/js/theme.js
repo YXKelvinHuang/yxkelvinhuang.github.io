@@ -2,13 +2,14 @@
 
 // Toggle through light, dark, and system theme settings.
 let toggleThemeSetting = () => {
-  let themeSetting = determineThemeSetting();
-  if (themeSetting == "system") {
+  // 读取当前实际显示的是什么模式（计算后的结果）
+  let theme = determineComputedTheme();
+  
+  // 如果当前看起来是暗的，就切去亮；否则切去暗
+  if (theme == "dark") {
     setThemeSetting("light");
-  } else if (themeSetting == "light") {
-    setThemeSetting("dark");
   } else {
-    setThemeSetting("system");
+    setThemeSetting("dark");
   }
 };
 
@@ -255,8 +256,9 @@ let transTheme = () => {
 // "system". Default is "system".
 let determineThemeSetting = () => {
   let themeSetting = localStorage.getItem("theme");
-  if (themeSetting != "dark" && themeSetting != "light" && themeSetting != "system") {
-    themeSetting = "system";
+  // 如果不是 dark 也不是 light（比如是 null 或者 system），强制设为 light
+  if (themeSetting != "dark" && themeSetting != "light") {
+    themeSetting = "light"; 
   }
   return themeSetting;
 };

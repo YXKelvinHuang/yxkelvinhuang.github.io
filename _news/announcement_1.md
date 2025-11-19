@@ -1,8 +1,8 @@
 ---
 layout: post
-date: 2015-10-22 15:59:00-0400
+date: 2025-04-14
 inline: true
 related_posts: false
 ---
 
-A simple inline announcement.
+Excited to kick off my research journey at Blender Lab (UIUC)! I will be working on VLM Robustness, advised by Prof. Qingyun Wang.
