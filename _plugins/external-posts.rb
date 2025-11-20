@@ -10,6 +10,11 @@ module ExternalPosts
     priority :high
 
     def generate(site)
+      if ENV['GITHUB_ACTIONS'] == 'true' || ENV['CI'] == 'true'
+        Jekyll.logger.warn "external-posts:", "Skipping external fetches on CI"
+        return
+      end
+      
       if site.config['external_sources'] != nil
         site.config['external_sources'].each do |src|
           puts "Fetching external posts from #{src['name']}:"
