@@ -5,4 +5,4 @@ inline: true
 related_posts: false
 ---
 
-Excited to kick off my research journey at Blender Lab (UIUC)! I will be working on VLM Robustness, advised by Prof. Qingyun Wang.
+Excited to kick off my research journey with Prof. Qingyun Wang at College of William & Mary, where I will be working on VLM robustness.
