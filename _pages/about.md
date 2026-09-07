@@ -2,15 +2,15 @@
 layout: about
 title: about
 permalink: /
-subtitle: <strong>Undergraduate Researcher | CS & Stats @ <a href='https://www.berkeley.edu/'>UC Berkeley</a></strong>
+subtitle: <strong>Ph.D. Student in Computer Science @ <a href='https://www.utoronto.ca/'>University of Toronto</a></strong>
 
 profile:
   align: right
-  image: portrait.jpeg
+  image: portrait2.jpg
   image_circular: false # crops the image to make it circular
   more_info: >
     <p>
-      yxkelvinhuang[at]berkeley.edu
+      kelvinhuang[at]cs.toronto.edu
     </p>
 
 selected_papers: true # includes a list of papers marked as "selected={true}"
@@ -27,12 +27,14 @@ latest_posts:
   limit: 3 # leave blank to include all the blog posts
 ---
 
-I am a senior undergraduate student at the **[University of California, Berkeley](https://www.berkeley.edu/)**, double majoring in **[Computer Science](https://eecs.berkeley.edu/cs/)** and **[Statistics](https://statistics.berkeley.edu/)**.
+I am a first-year Ph.D. student advised by **[Prof. Gururaj Saileshwar](https://gururaj-s.github.io/)** in the **SITH Lab**.
 
-I will join the **[University of Toronto](https://www.utoronto.ca/)** in Fall 2026 as a Ph.D. student in the **[Computer Science PhD Program](https://web.cs.toronto.edu/graduate/phd)**, advised by **[Prof. Gururaj Saileshwar](https://gururaj-s.github.io/)**.
+Prior to my Ph.D., I completed my undergraduate studies in **Computer Science** and **Statistics** at the **[University of California, Berkeley](https://www.berkeley.edu/)**.
 
-My research interests lie broadly in **Artificial Intelligence**, with a specific focus on **Trustworthy AI**, **Vision-Language Models (VLMs)**, and **Agentic Systems**. My current goal is to build AI systems that are robust against adversarial attacks and transparent through structured observability.
+My research primarily focuses on **agentic system security**, with an emphasis on mitigating system-level security risks in autonomous and tool-using AI agents. I am particularly interested in runtime security, privilege-boundary enforcement, attack-path abstractions, and security monitoring for agentic systems.
 
-Currently, I am a Researcher on Trustworthy Agentic AI at UC Berkeley, advised by **[Prof. Dawn Song](https://dawnsong.io/)**, focusing on structured observability for agent systems. Simultaneously, I conduct independent research on adversarial robustness for LVLMs at the **[Blender Lab](https://blender.cs.illinois.edu/)** (UIUC), advised by **[Prof. Qingyun Wang](https://eaglew.github.io/)** (now at William & Mary).
+My previous research has also explored **trustworthy AI** and **adversarial robustness**, particularly in vision-language models.
 
-Previously, I was selected for the **[Summer Research Programme (SRP)](https://datascience.hku.hk/study/summer-research-programme/)** at **[HKU-EEE](https://www.eee.hku.hk/)**, where I developed a physics-aware 3D generation pipeline advised by **[Prof. Xihui Liu](https://xh-liu.github.io/)**. I also served as a Lead Developer at the **[Levi Lab](https://www.levilabberkeley.org/)** (UC Berkeley), engineering computational frameworks for vision and eye movement modeling under **[Prof. Dennis Levi](https://optometry.berkeley.edu/people/dennis-m-levi-od-phd/)**.
+I have worked on trustworthy and secure AI across several research settings. At UC Berkeley, I conducted research on trustworthy agentic AI advised by **[Prof. Dawn Song](https://dawnsong.io/)**, focusing on structured observability for agent systems. I also worked on adversarial robustness for large vision-language models, advised by **[Prof. Qingyun Wang](https://eaglew.github.io/)**.
+
+Earlier, I also worked on 3D generation at HKU with **[Prof. Xihui Liu](https://xh-liu.github.io/)**, and on computational vision at UC Berkeley with **[Prof. Dennis Levi](https://optometry.berkeley.edu/people/dennis-m-levi-od-phd/)**.
