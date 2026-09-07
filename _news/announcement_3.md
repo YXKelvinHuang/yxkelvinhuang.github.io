@@ -1,8 +1,8 @@
 ---
 layout: post
-date: 2025-11-05
+date: 2026-03-30
 inline: true
 related_posts: false
 ---
 
-Thrilled to share that our paper on VLM adversarial robustness has been accepted to the AAAI 2026 AIGOV Workshop! 🎉
+I’m very excited to share that I will be joining the University of Toronto this fall as a PhD student in Computer Science. 🎓
