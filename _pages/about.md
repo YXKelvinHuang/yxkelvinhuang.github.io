@@ -33,8 +33,6 @@ Prior to my Ph.D., I completed my undergraduate studies in **Computer Science** 
 
 My research primarily focuses on **agentic system security**, with an emphasis on mitigating system-level security risks in autonomous and tool-using AI agents. I am particularly interested in runtime security, privilege-boundary enforcement, attack-path abstractions, and security monitoring for agentic systems.
 
-My previous research has also explored **trustworthy AI** and **adversarial robustness**, particularly in vision-language models.
-
-I have worked on trustworthy and secure AI across several research settings. At UC Berkeley, I conducted research on trustworthy agentic AI advised by **[Prof. Dawn Song](https://dawnsong.io/)**, focusing on structured observability for agent systems. I also worked on adversarial robustness for large vision-language models, advised by **[Prof. Qingyun Wang](https://eaglew.github.io/)**.
+Previously, my research spanned **trustworthy AI** and **adversarial robustness**. At UC Berkeley, I conducted research on trustworthy agentic AI advised by **[Prof. Dawn Song](https://dawnsong.io/)**, focusing on structured observability for agent systems. I also worked on adversarial robustness for large vision-language models, advised by **[Prof. Qingyun Wang](https://eaglew.github.io/)**.
 
 Earlier, I also worked on 3D generation at HKU with **[Prof. Xihui Liu](https://xh-liu.github.io/)**, and on computational vision at UC Berkeley with **[Prof. Dennis Levi](https://optometry.berkeley.edu/people/dennis-m-levi-od-phd/)**.

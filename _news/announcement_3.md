@@ -1,8 +1,8 @@
 ---
 layout: post
-date: 2026-03-30
+date: 2026-05-16
 inline: true
 related_posts: false
 ---
 
-I’m very excited to share that I will be joining the University of Toronto this fall as a PhD student in Computer Science. 🎓
+Graduated from UC Berkeley with degrees in Computer Science and Statistics. 🎓
