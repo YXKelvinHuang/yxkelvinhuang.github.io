@@ -362,16 +362,7 @@ ninja.data = [{
           description: "",
           section: "Books",handler: () => {
               window.location.href = "/books/the_godfather/";
-            },},{id: "news-honored-to-be-selected-for-the-summer-research-programme-srp-at-hku-advised-by-prof-xihui-liu",
-          title: 'Honored to be selected for the Summer Research Programme (SRP) at HKU, advised...',
-          description: "",
-          section: "News",},{id: "news-excited-to-kick-off-my-research-journey-with-prof-qingyun-wang-at-college-of-william-amp-amp-mary-where-i-will-be-working-on-vlm-robustness",
-          title: 'Excited to kick off my research journey with Prof. Qingyun Wang at College...',
-          description: "",
-          section: "News",},{id: "news-excited-to-start-as-a-researcher-advised-by-prof-dawn-song-to-work-on-trustworthy-agentic-ai",
-          title: 'Excited to start as a researcher advised by Prof. Dawn Song to work...',
-          description: "",
-          section: "News",},{id: "news-thrilled-to-share-that-our-paper-on-vlm-adversarial-robustness-has-been-accepted-to-the-aaai-2026-aigov-workshop",
+            },},{id: "news-thrilled-to-share-that-our-paper-on-vlm-adversarial-robustness-has-been-accepted-to-the-aaai-2026-aigov-workshop",
           title: 'Thrilled to share that our paper on VLM adversarial robustness has been accepted...',
           description: "",
           section: "News",},{id: "news-thrilled-to-share-that-our-paper-on-trustworthy-agentic-ai-has-been-accepted-to-the-aaai-2026-trustagent-workshop",
@@ -437,7 +428,7 @@ ninja.data = [{
         title: 'email',
         section: 'Socials',
         handler: () => {
-          window.open("mailto:%79%78%6B%65%6C%76%69%6E%68%75%61%6E%67@%62%65%72%6B%65%6C%65%79.%65%64%75", "_blank");
+          window.open("mailto:%6B%65%6C%76%69%6E%68%75%61%6E%67@%63%73.%74%6F%72%6F%6E%74%6F.%65%64%75", "_blank");
         },
       },{
         id: 'social-linkedin',
